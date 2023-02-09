@@ -1,0 +1,6 @@
+<h1>{{ checklist.checklist_title }}</h1>
+<ul>
+{% for checklistitem in checklist.checklistitem_set.all %}
+    <li>{{ checklistitem.item_title }}</li>
+{% endfor %}
+</ul>

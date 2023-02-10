@@ -4,5 +4,6 @@ from . import views
 
 app_name = 'sm_app'
 urlpatterns = [
-    path('<int:checklist_id>/', views.checklist_view, name='checklist'),
+    path('update_item_status/<int:checklist_id>/<int:checklistitem_id>/<int:value>/', views.update_item_status, name="update_item_status"),
+    path('<int:checklist_id>/', views.checklist_view, name="checklist"),
 ]

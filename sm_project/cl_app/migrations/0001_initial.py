@@ -32,12 +32,12 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('item_title', models.CharField(max_length=200)),
                 ('item_status', models.IntegerField(choices=[(1, 'Completed'), (2, 'In Review'), (3, 'Incomplete')], default=3)),
-                ('item_checklist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sm_app.checklist')),
+                ('item_checklist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cl_app.checklist')),
             ],
         ),
         migrations.AddField(
             model_name='checklist',
             name='checklist_users',
-            field=models.ManyToManyField(to='sm_app.user'),
+            field=models.ManyToManyField(to='cl_app.user'),
         ),
     ]

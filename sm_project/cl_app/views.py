@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
 from .models import Checklist, ChecklistItem
+
 
 def checklist_view(request, checklist_id):
     checklist = get_object_or_404(Checklist, pk=checklist_id)

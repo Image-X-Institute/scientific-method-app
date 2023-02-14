@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sm_project.user_app.apps.UserAppConfig',
     'sm_project.cl_app.apps.ClAppConfig',
 ]
 
@@ -69,6 +70,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sm_project.wsgi.application'
+
+AUTH_USER_MODEL = 'user_app.User'
 
 
 # Database

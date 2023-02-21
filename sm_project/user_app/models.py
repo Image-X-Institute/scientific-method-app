@@ -25,6 +25,7 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
+    username = None
     email = models.EmailField(max_length=255, unique=True)
     admin = models.BooleanField(default=False)
     objects = UserManager()

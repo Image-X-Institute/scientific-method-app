@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 
+# The urls that link to each app in the project
 urlpatterns = [
     path('sm_project/cl_app/', include('sm_project.cl_app.urls')),
     path('sm_project/user_app/', include('sm_project.user_app.urls')),

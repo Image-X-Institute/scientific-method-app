@@ -1,11 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.views.decorators.csrf import csrf_protect
-from .models import User
 from django.contrib.auth.forms import AuthenticationForm
 
 
+# Renders a view of the login screen and authenticates that the user's details are in the system.
 @csrf_protect
 def login_request(request):
     if request.method == "POST":

@@ -24,4 +24,4 @@ def login_request(request):
             messages.error(request, "Invalid form.")
     else:
         login_form = AuthenticationForm()
-        return render(request, "user_app/login.html", {"login_form": login_form})
+    return render(request, "user_app/login.html", {"login_form": login_form})

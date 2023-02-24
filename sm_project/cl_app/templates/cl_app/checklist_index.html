@@ -5,6 +5,9 @@
     <li>
         {{ checklist.checklist_title }}
         <a href="{% url 'cl_app:checklist' checklist.id %}"><button>Open</button></a>
+        {% if checklist.creator == user %}
+            <a href="{% url 'cl_app:remove_checklist' checklist.id %}"><button>Remove</button></a>
+        {% endif %}
     </li>
 {% endfor %}
 </ul>

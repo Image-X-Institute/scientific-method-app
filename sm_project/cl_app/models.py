@@ -11,6 +11,8 @@ class Checklist(models.Model):
     ----------
     checklist_title: CharField
         The title of the checklist.
+    creator: ForeignKey
+        The creator of the checklist.
     checklist_users: ManyToManyField
         A field that stores the many to many relationships between the checklists and the users.
     researchers: ManyToManyField
@@ -24,9 +26,10 @@ class Checklist(models.Model):
         Prints the title of the checklist
     """
     checklist_title = models.CharField(max_length=200)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator')
     checklist_users = models.ManyToManyField(User)
     researchers = models.ManyToManyField(User, related_name='researchers')
-    reviewers = models.ManyToManyField(User, related_name='reviewers')
+    reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True)
 
     def __str__(self):
         return self.checklist_title

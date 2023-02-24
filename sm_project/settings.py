@@ -73,6 +73,8 @@ WSGI_APPLICATION = 'sm_project.wsgi.application'
 
 AUTH_USER_MODEL = 'user_app.User'
 
+LOGOUT_REDIRECT_URL = "/"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

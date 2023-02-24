@@ -1,0 +1,11 @@
+
+<h1>Checklists</h1>
+<ul>
+{% for checklist in user.checklist_set.all %}
+    <li>
+        {{ checklist.checklist_title }}
+        <a href="{% url 'cl_app:checklist' checklist.id %}"><button>Open</button></a>
+    </li>
+{% endfor %}
+</ul>
+<a href="{% url 'cl_app:logout' %}"><button>Logout</button></a>

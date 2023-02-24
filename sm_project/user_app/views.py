@@ -17,11 +17,11 @@ def login_request(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {email}.")
-                return redirect('cl_app:checklist', checklist_id=1)
+                return redirect('cl_app:user_checklists')
             else:
                 messages.error(request, "Invalid email or password.")
         else:
             messages.error(request, "Invalid form.")
     else:
         login_form = AuthenticationForm()
-    return render(request, "user_app/login.html", {"login_form": login_form})
+        return render(request, "user_app/login.html", {"login_form": login_form})

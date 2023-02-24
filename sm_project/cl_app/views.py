@@ -2,6 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Checklist, ChecklistItem
 
 
+# Renders a view of all the checklists that the user has.
+def checklist_index(request):
+    if request.user.is_authenticated:
+        return render(request, 'cl_app/checklist_index.html', {'user_checklists': request.user})
+    else:
+        return redirect('user_app:login')
+
 """Renders a view of the checklist with the corresponding id.
 
 Parameters
@@ -11,7 +18,13 @@ checklist_id: int
 """
 def checklist_view(request, checklist_id):
     checklist = get_object_or_404(Checklist, pk=checklist_id)
-    return render(request, 'cl_app/checklist.html', {'checklist': checklist})
+    if request.user.is_authenticated:
+        if checklist.checklist_users.contains(request.user):
+            return render(request, 'cl_app/checklist.html', {'checklist': checklist})
+        else:
+            return redirect('cl_app:user_checklists')
+    else:
+        return redirect('user_app:login')
 
 """Updates the status of a given checklist item.
 

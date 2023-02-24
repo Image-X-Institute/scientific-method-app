@@ -2,7 +2,7 @@
 
 **Author:** Lily Watt
 
-**ReadMe Last Updated:** 14/02/2022
+**ReadMe Last Updated:** 24/02/2022
 
 The goal of this project is to create an application that will help support the scientific method throughout the paper writing process. The app allows users to enter each step of the scientific method in a checklist format. Researchers mark those items as done and have reviewers then verify that each section of the report has been completed appropriately before the researchers move onto the next section. 
 
@@ -28,11 +28,9 @@ To use the program, simply run the following command inside the scientific-metho
 ```python
 python3 manage.py runserver
 ```
-This should give you a link to view the application with at the line ```Starting development server at [link]```. For example, ```http://127.0.0.1:8000/```.
+This should give you a link to view the application with at the line ```Starting development server at [link]```. For example, ```http://127.0.0.1:8000/```. From there, login as any user accounts you've created. However, it's suggested that you add more database entries before testing out the site.
 
-To add more database entries, head to the link listed in the terminal followed by ```.../admin/```. Enter the details you used when you created the admin user and login. From here, you can select any database entry and add more entires.
-
-To access each checklist, head to link listed in the terminal followed by ```.../sm_project/cl_app/``` followed by the id of the checklist you want to look at. For example, ```http://127.0.0.1:8000/sm_project/cl_app/1/``` would access the page for the checklist with the id of 1 at the given development server.
+To add more database entries, head to the link listed in the terminal followed by ```.../admin/```. For example, ```http://127.0.0.1:8000/admin/```. Enter the details you used when you created the admin user and login. From here, you can select any database entry and add more entires.
 
 ## Directory Structure
 

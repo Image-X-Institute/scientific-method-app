@@ -13,6 +13,10 @@ class Checklist(models.Model):
         The title of the checklist.
     checklist_users: ManyToManyField
         A field that stores the many to many relationships between the checklists and the users.
+    researchers: ManyToManyField
+        A field that stores the many to many relationships between the checklists and the researchers.
+    reviewers: ManyToManyField
+        A field that stores the many to many relationships between the checklists and the researchers.
 
     Methods
     -------
@@ -21,6 +25,8 @@ class Checklist(models.Model):
     """
     checklist_title = models.CharField(max_length=200)
     checklist_users = models.ManyToManyField(User)
+    researchers = models.ManyToManyField(User, related_name='researchers')
+    reviewers = models.ManyToManyField(User, related_name='reviewers')
 
     def __str__(self):
         return self.checklist_title
@@ -48,7 +54,7 @@ class ChecklistItem(models.Model):
     class Status(models.IntegerChoices):
         # A class that stores the available choices for the IntegerField, item_status
         COMPLETED = 1, 'Completed'
-        IN_REVIEW = 2, 'In Review'
+        FOR_REVIEW = 2, 'For Review'
         INCOMPLETE = 3, 'Incomplete'
 
     item_checklist = models.ForeignKey(Checklist, on_delete=models.CASCADE)

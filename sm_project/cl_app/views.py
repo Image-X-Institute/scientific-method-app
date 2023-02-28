@@ -93,7 +93,7 @@ def add_item(request, checklist_id):
     else:
         return redirect('user_app:login')
 
-"""Removes a checklist item to the checklist with the corresponding id.
+"""Removes a checklist item of the checklist with the corresponding id.
 
 Parameters
 ----------

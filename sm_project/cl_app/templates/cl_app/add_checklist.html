@@ -1,0 +1,6 @@
+<h2>Checklist Creation</h2>
+<form method="POST">
+  {% csrf_token %}
+  {{ checklist_form.as_p }}
+  <button type="submit">Create Checklist</button>
+</form>

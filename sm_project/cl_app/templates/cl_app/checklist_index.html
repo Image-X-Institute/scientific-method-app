@@ -1,5 +1,6 @@
 
 <h1>Checklists</h1>
+<a href="{% url 'cl_app:add_checklist' %}"><button>Add Checklist</button></a>
 <ul>
 {% for checklist in user.checklist_set.all %}
     <li>

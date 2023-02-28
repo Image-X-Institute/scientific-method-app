@@ -13,5 +13,6 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name="logout"),
     path('checklist<int:checklist_id>/', views.checklist_view, name="checklist"),
     path('checklist<int:checklist_id>/add/', views.add_item, name="add_item"),
+    path('remove_item<int:checklistitem_id>/', views.remove_item, name="remove_item"),
     path('update_item_status/<int:checklist_id>/<int:checklistitem_id>/<int:value>/', views.update_item_status, name="update_item_status"),
 ]

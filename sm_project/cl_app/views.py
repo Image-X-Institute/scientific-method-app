@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Checklist, ChecklistItem
-from .forms import ChecklistForm
+from .forms import ChecklistForm, ChecklistItemForm
 
 
 # Renders a view of all the checklists that the user has.
@@ -18,7 +18,8 @@ def add_checklist(request):
             if checklist_form.is_valid():
                 new_checklist = Checklist(
                     checklist_title = checklist_form.cleaned_data.get('checklist_title'), 
-                    creator = request.user)
+                    creator = request.user
+                )
                 new_checklist.save()
                 new_checklist.researchers.set(checklist_form.cleaned_data.get('researchers'))
                 new_checklist.reviewers.set(checklist_form.cleaned_data.get('reviewers'))
@@ -57,7 +58,36 @@ def checklist_view(request, checklist_id):
     if request.user.is_authenticated:
         checklist = get_object_or_404(Checklist, pk=checklist_id)
         if checklist.checklist_users.contains(request.user):
-            return render(request, 'cl_app/checklist.html', {'checklist': checklist})
+            item_form = ChecklistItemForm()
+            return render(request, 'cl_app/checklist.html', {'checklist': checklist, 'item_form': item_form})
+        else:
+            return redirect('cl_app:user_checklists')
+    else:
+        return redirect('user_app:login')
+
+"""Adds a checklist item to the checklist with the corresponding id.
+
+Parameters
+----------
+checklist_id: int
+    The id of the checklist
+"""  
+def add_item(request, checklist_id):
+    if request.user.is_authenticated:
+        checklist = get_object_or_404(Checklist, pk=checklist_id)
+        if checklist.checklist_users.contains(request.user):
+            if request.method == "POST":
+                item_form = ChecklistItemForm(request.POST)
+                if item_form.is_valid():
+                    new_item = ChecklistItem(
+                        item_checklist = checklist,
+                        item_title = item_form.cleaned_data.get('item_title')
+                    )
+                    new_item.save()
+                    item_form = ChecklistItemForm()
+            else:
+                item_form = ChecklistItemForm()
+            return redirect('cl_app:checklist', checklist_id)
         else:
             return redirect('cl_app:user_checklists')
     else:

@@ -16,4 +16,9 @@
     </li>
 {% endfor %}
 </ul>
+<form action="{% url 'cl_app:add_item' checklist.id %}" method="POST">
+    {% csrf_token %}
+    {{ item_form }}
+    <button type="submit">Create Item</button>
+</form>
 <a href="{% url 'cl_app:user_checklists' %}"><button>Back</button></a>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Checklist
+from .models import Checklist, ChecklistItem
 from ..user_app.models import User
 
 
@@ -9,7 +9,7 @@ class ChecklistForm(forms.ModelForm):
         model = Checklist
         fields = ['checklist_title', 'researchers', 'reviewers']
 
-    checklist_title = forms.CharField()
+    checklist_title = forms.CharField(label="Checklist Title")
     researchers = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple
@@ -18,3 +18,11 @@ class ChecklistForm(forms.ModelForm):
         queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple
     )
+
+class ChecklistItemForm(forms.ModelForm):
+
+    class Meta:
+        model = ChecklistItem
+        fields = ['item_title']
+    
+    item_title = forms.CharField(label="Add Item")

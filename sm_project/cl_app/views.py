@@ -61,6 +61,23 @@ def add_temp_item(request):
     else:
         return redirect('user_app:login')
 
+"""Removes an item from the temporary storage checklist.
+
+Parameters
+----------
+item_id: int
+    The id of the temporary checklist item.
+"""
+def remove_temp_item(request, item_id):
+    if request.user.is_authenticated:
+        item = get_object_or_404(ChecklistItem, pk=item_id)
+        item_checklist = request.user.get_temp_checklist()
+        if item.item_checklist == item_checklist:
+            item.delete()
+        return redirect('cl_app:add_checklist')
+    else:
+        return redirect('user_app:login')
+
 """Allows the creator of a checklist to delete said checklist.
 
 Parameters

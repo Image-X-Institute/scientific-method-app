@@ -5,9 +5,10 @@
 </form>
 <h3>Checklist Items</h3>
 <ul>
-    {% for checklistitem in temp_checklist.checklistitem_set.all %}
+    {% for item in temp_checklist.checklistitem_set.all %}
         <li>
-            {{ checklistitem.item_title }}
+            {{ item.item_title }}
+            <a href="{% url 'cl_app:remove_temp_item' item.id %}"><button>Remove Item</button></a>
         </li>
     {% endfor %}
     </ul>

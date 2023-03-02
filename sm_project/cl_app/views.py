@@ -6,6 +6,8 @@ from .forms import ChecklistForm, ChecklistItemForm
 # Renders a view of all the checklists that the user has.
 def checklist_index(request):
     if request.user.is_authenticated:
+        if request.user.has_temp_checklist():
+            request.user.get_temp_checklist().delete()
         return render(request, 'cl_app/checklist_index.html', {'user_checklists': request.user})
     else:
         return redirect('user_app:login')
@@ -13,8 +15,14 @@ def checklist_index(request):
 # Renders a view of the add checklist screen and allows the user to create a new checklist.
 def add_checklist(request):
     if request.user.is_authenticated:
-        if request.method == "POST":
+        if request.user.has_temp_checklist():
+            temp_checklist = request.user.get_temp_checklist()
+        else:
+            temp_checklist = Checklist(checklist_title = ("Temp" + str(request.user.id)), creator = request.user)
+            temp_checklist.save()
+        if request.method == "POST" and request.path == "/checklists/add_checklist/":
             checklist_form = ChecklistForm(request.POST)
+            item_form = ChecklistItemForm()
             if checklist_form.is_valid():
                 new_checklist = Checklist(
                     checklist_title = checklist_form.cleaned_data.get('checklist_title'), 
@@ -24,10 +32,26 @@ def add_checklist(request):
                 new_checklist.researchers.set(checklist_form.cleaned_data.get('researchers'))
                 new_checklist.reviewers.set(checklist_form.cleaned_data.get('reviewers'))
                 new_checklist.checklist_users.set(new_checklist.researchers.all().union(new_checklist.reviewers.all()))
+                new_checklist.checklistitem_set.set(temp_checklist.checklistitem_set.all())
+                temp_checklist.delete()
                 return redirect('cl_app:user_checklists')
+        elif request.method == "POST" and request.path == "/checklists/add_checklist/add_item/":
+            item_form = ChecklistItemForm(request.POST)
+            if item_form.is_valid():
+                new_item = ChecklistItem(
+                    item_checklist = temp_checklist,
+                    item_title = item_form.cleaned_data.get('item_title')
+                )
+                new_item.save()
+            return redirect('cl_app:add_checklist')
         else:
             checklist_form = ChecklistForm()
-        return render(request, 'cl_app/add_checklist.html', {'checklist_form': checklist_form})
+            item_form = ChecklistItemForm()
+        return render(
+            request, 
+            'cl_app/add_checklist.html', 
+            {'checklist_form': checklist_form, 'item_form': item_form, 'temp_checklist': temp_checklist}
+        )
     else:
         return redirect('user_app:login')
 

@@ -1,7 +1,20 @@
-<h2>Checklist Creation</h2>
-<form method="POST">
-  {% csrf_token %}
-  {{ checklist_form.as_p }}
-  <button type="submit">Create Checklist</button>
+<h1>Checklist Creation</h1>
+<form id="add_checklist" action="{% url 'cl_app:add_checklist' %}?temp_id={{temp_checklist.id}}" method="POST">
+    {% csrf_token %}
+    {{ checklist_form.as_p }}
 </form>
+<h3>Checklist Items</h3>
+<ul>
+    {% for checklistitem in temp_checklist.checklistitem_set.all %}
+        <li>
+            {{ checklistitem.item_title }}
+        </li>
+    {% endfor %}
+    </ul>
+    <form action="{% url 'cl_app:add_temp_item' %}?temp_id={{temp_checklist.id}}" method="POST">
+        {% csrf_token %}
+        {{ item_form }}
+        <button type="submit">Add Item</button>
+    </form>
+<button type="submit" form="add_checklist">Create Checklist</button>
 <a href="{% url 'cl_app:user_checklists' %}"><button>Back</button></a>

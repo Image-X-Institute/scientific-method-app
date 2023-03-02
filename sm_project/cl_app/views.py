@@ -45,6 +45,7 @@ def add_checklist(request):
     else:
         return redirect('user_app:login')
 
+# Adds an item to a checklist that is used to store the checklist items until the user finalises the details of the checklist.
 def add_temp_item(request):
     if request.user.is_authenticated:
         temp_checklist = request.user.get_temp_checklist()

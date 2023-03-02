@@ -51,9 +51,15 @@ Methods
 __str__(self)
     Returns the email of the user.
 is_staff(self)
-    Returns whether the user is considered an staff member
+    Returns whether the user is considered an staff member.
 is_admin(self)
-    Returns whether the user is considered an admin
+    Returns whether the user is considered an admin.
+has_temp_checklist(self)
+    Returns whether the checklist that is used to store temporary checklist items as part of checklist creation exists.
+    See add_checklist(request) and add_temp_item(request) in cl_app/views.py for more.
+get_temp_checklist(self)
+    Returns the checklist that is used to store temporary checklist items as part of checklist creation.
+    See add_checklist(request) and add_temp_item(request) in cl_app/views.py for more.
 """
 class User(AbstractBaseUser):
     username = None

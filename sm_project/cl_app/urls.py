@@ -9,7 +9,7 @@ app_name = 'cl_app'
 urlpatterns = [
     path('', views.checklist_index, name="user_checklists"),
     path('add_checklist/', views.add_checklist, name="add_checklist"),
-    path('add_checklist/add_item/', views.add_checklist, name="add_temp_item"),
+    path('add_checklist/add_item/', views.add_temp_item, name="add_temp_item"),
     path('remove_checklist<int:checklist_id>/', views.remove_checklist, name="remove_checklist"),
     path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name="logout"),
     path('checklist<int:checklist_id>/', views.checklist_view, name="checklist"),

@@ -41,6 +41,8 @@ username: None
     Sets the default username of the user class as none.
 email: EmailField
     The email of the user. This attribute has a limit of 255 characters and must be unique.
+name: CharField
+    The name of the user. This attribute has a limit of 70 characters.
 admin: BooleanField
     Defines whether the user is an admin user or not.
 objects: class
@@ -58,6 +60,7 @@ is_admin(self)
 class User(AbstractBaseUser):
     username = None
     email = models.EmailField(max_length=255, unique=True)
+    name = models.CharField(max_length=70)
     admin = models.BooleanField(default=False)
     objects = UserManager()
 

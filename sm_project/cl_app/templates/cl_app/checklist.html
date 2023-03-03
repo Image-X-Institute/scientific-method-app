@@ -3,6 +3,7 @@
 {% elif checklist in user.reviewers.all %}
     <h1>{{ checklist.checklist_title }} - Reviewer View</h1>
 {% endif %}
+<h3>Created By: {{ checklist.creator.name }}</h3>
 <ul>
 {% for checklistitem in checklist.checklistitem_set.all %}
     <li>

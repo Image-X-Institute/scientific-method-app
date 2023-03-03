@@ -5,20 +5,19 @@ from .models import User
 
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
-        (None, {'fields': ('email', 'name', 'password')}),
-        ('Personal info', {'fields': ()}),
+        (None, {'fields': ('name', 'email', 'password')}),
         ('Permissions', {'fields': ('admin',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'name', 'password1', 'password2')
+            'fields': ('name', 'email', 'password1', 'password2')
         }),
     )
-    list_display = ['email', 'name', 'admin']
+    list_display = ['name', 'email', 'admin']
     list_filter = ['admin']
-    search_fields = ['email']
-    ordering = ['email']
+    search_fields = ['name', 'email']
+    ordering = ['name', 'email']
     filter_horizontal = ()
 
 

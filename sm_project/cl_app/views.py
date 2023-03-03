@@ -93,6 +93,24 @@ def add_item(request, checklist_id):
     else:
         return redirect('user_app:login')
 
+"""Removes a checklist item of the checklist with the corresponding id.
+
+Parameters
+----------
+checklist_id: int
+    The id of the checklist
+"""  
+def remove_item(request, checklistitem_id):
+    if request.user.is_authenticated:
+        item = get_object_or_404(ChecklistItem, pk=checklistitem_id)
+        if item.item_checklist.checklist_users.contains(request.user):
+            item.delete()
+            return redirect('cl_app:checklist', item.item_checklist.pk)
+        else:
+            return redirect('cl_app:user_checklists')
+    else:
+        return redirect('user_app:login')
+
 """Updates the status of a given checklist item.
 
 Parameters

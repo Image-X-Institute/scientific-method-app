@@ -10,6 +10,11 @@ class ChecklistForm(forms.ModelForm):
         fields = ['checklist_title', 'researchers', 'reviewers']
 
     checklist_title = forms.CharField(label="Checklist Title")
+    checklist_users = forms.ModelMultipleChoiceField(
+        label="Checklist Users",
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
     researchers = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple

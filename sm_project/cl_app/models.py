@@ -1,5 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.contrib import admin
+from django.db import models
 
 
 User = settings.AUTH_USER_MODEL
@@ -25,14 +26,19 @@ class Checklist(models.Model):
     __str__(self)
         Prints the title of the checklist
     """
-    checklist_title = models.CharField(max_length=200)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='creator')
-    checklist_users = models.ManyToManyField(User)
+    checklist_title = models.CharField(verbose_name="Checklist", max_length=200)
+    creator = models.ForeignKey(User, verbose_name="Creator Email", on_delete=models.CASCADE, related_name='creator')
+    checklist_users = models.ManyToManyField(User, verbose_name="Users")
     researchers = models.ManyToManyField(User, related_name='researchers')
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True)
 
     def __str__(self):
         return self.checklist_title
+    
+    @property
+    @admin.display(description="Creator")
+    def creator_name(self):
+        return self.creator.name
 
 class ChecklistItem(models.Model):
     """A model class used to represent the items in each of the checklists.
@@ -60,9 +66,9 @@ class ChecklistItem(models.Model):
         FOR_REVIEW = 2, 'For Review'
         INCOMPLETE = 3, 'Incomplete'
 
-    item_checklist = models.ForeignKey(Checklist, on_delete=models.CASCADE)
-    item_title = models.CharField(max_length=200)
-    item_status = models.IntegerField(choices=Status.choices, default=Status.INCOMPLETE)
+    item_checklist = models.ForeignKey(Checklist, verbose_name="Checklist", on_delete=models.CASCADE)
+    item_title = models.CharField(verbose_name="Checklist Item", max_length=200)
+    item_status = models.IntegerField(verbose_name="Status", choices=Status.choices, default=Status.INCOMPLETE)
 
     def __str__(self):
         return self.item_title

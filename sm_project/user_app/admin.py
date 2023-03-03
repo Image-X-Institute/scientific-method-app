@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User
 
 
+# Organises how the User information is displayed on the admin site.
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('name', 'email', 'password')}),

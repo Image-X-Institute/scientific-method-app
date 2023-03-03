@@ -25,6 +25,8 @@ class Checklist(models.Model):
     -------
     __str__(self)
         Prints the title of the checklist
+    creator_name(self):
+        Returns the name of the creator of the checklist.
     """
     checklist_title = models.CharField(verbose_name="Checklist", max_length=200)
     creator = models.ForeignKey(User, verbose_name="Creator Email", on_delete=models.CASCADE, related_name='creator')

@@ -3,6 +3,7 @@ from .forms import ChecklistForm
 from .models import Checklist, ChecklistItem
 
 
+# Creates a list filter that filters by specific users and displays which both the user's name and email 
 class UserFilter(admin.SimpleListFilter):
     title = 'User'
     parameter_name = 'user'
@@ -20,6 +21,7 @@ class UserFilter(admin.SimpleListFilter):
         else:
             return queryset.filter(checklist_users__id = self.value())
 
+# Organises how the information about each checklist is displayed on the admin site.
 class ChecklistAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
@@ -32,6 +34,7 @@ class ChecklistAdmin(admin.ModelAdmin):
     ordering = ['checklist_title']
     form = ChecklistForm
 
+# Organises how the information about each checklist item is displayed on the admin site.
 class ChecklistItemAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {

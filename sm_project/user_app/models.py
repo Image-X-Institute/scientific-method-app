@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.shortcuts import get_object_or_404
 
 
 """A custom user manager class for the new user class.
@@ -92,4 +93,4 @@ class User(AbstractBaseUser):
         return self.creator.filter(checklist_title=(f"Temp{self.id}")).exists()
     
     def get_temp_checklist(self):
-        return self.creator.get(checklist_title=(f"Temp{self.id}"))
+        return get_object_or_404(self.creator, checklist_title=(f"Temp{self.id}"))

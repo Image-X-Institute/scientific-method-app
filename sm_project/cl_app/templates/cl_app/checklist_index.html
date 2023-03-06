@@ -5,9 +5,11 @@
 {% for checklist in user.checklist_set.all %}
     <li>
         {{ checklist.checklist_title }}
-        <a href="{% url 'cl_app:checklist' checklist.id %}"><button>Open</button></a>
+        <a href="{% url 'cl_app:checklist' checklist.id %}"><button>Open Checklist</button></a>
         {% if checklist.creator == user %}
-            <a href="{% url 'cl_app:remove_checklist' checklist.id %}"><button>Remove</button></a>
+            <a href="{% url 'cl_app:remove_checklist' checklist.id %}"><button>Delete Checklist</button></a>
+        {% else %}
+            <a href="{% url 'cl_app:leave_checklist' checklist.id %}"><button>Leave Checklist</button></a>
         {% endif %}
     </li>
 {% endfor %}

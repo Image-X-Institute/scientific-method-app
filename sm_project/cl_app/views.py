@@ -31,6 +31,26 @@ def add_checklist(request):
     else:
         return redirect('user_app:login')
 
+"""Allows the user to remove themselves from a checklist's list of users.
+
+Parameters
+----------
+checklist_id: int
+    The id of the checklist that the user is leaving
+"""
+def leave_checklist(request, checklist_id):
+    if request.user.is_authenticated:
+        checklist = get_object_or_404(Checklist, pk=checklist_id)
+        if checklist.creator != request.user and checklist.checklist_users.contains(request.user):
+            checklist.checklist_users.remove(request.user)
+            if checklist.researchers.contains(request.user):
+                checklist.researchers.remove(request.user)
+            if checklist.reviewers.contains(request.user):
+                checklist.reviewers.remove(request.user)
+        return redirect('cl_app:user_checklists')
+    else:
+        return redirect('user_app:login')
+
 """Allows the creator of a checklist to delete said checklist.
 
 Parameters

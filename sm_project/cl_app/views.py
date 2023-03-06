@@ -78,6 +78,26 @@ def remove_temp_item(request, item_id):
     else:
         return redirect('user_app:login')
 
+"""Allows the user to remove themselves from a checklist's list of users.
+
+Parameters
+----------
+checklist_id: int
+    The id of the checklist that the user is leaving
+"""
+def leave_checklist(request, checklist_id):
+    if request.user.is_authenticated:
+        checklist = get_object_or_404(Checklist, pk=checklist_id)
+        if checklist.creator != request.user and checklist.checklist_users.contains(request.user):
+            checklist.checklist_users.remove(request.user)
+            if checklist.researchers.contains(request.user):
+                checklist.researchers.remove(request.user)
+            if checklist.reviewers.contains(request.user):
+                checklist.reviewers.remove(request.user)
+        return redirect('cl_app:user_checklists')
+    else:
+        return redirect('user_app:login')
+
 """Allows the creator of a checklist to delete said checklist.
 
 Parameters
@@ -135,6 +155,24 @@ def add_item(request, checklist_id):
             else:
                 item_form = ChecklistItemForm()
             return redirect('cl_app:checklist', checklist_id)
+        else:
+            return redirect('cl_app:user_checklists')
+    else:
+        return redirect('user_app:login')
+
+"""Removes a checklist item of the checklist with the corresponding id.
+
+Parameters
+----------
+checklist_id: int
+    The id of the checklist
+"""  
+def remove_item(request, checklistitem_id):
+    if request.user.is_authenticated:
+        item = get_object_or_404(ChecklistItem, pk=checklistitem_id)
+        if item.item_checklist.checklist_users.contains(request.user):
+            item.delete()
+            return redirect('cl_app:checklist', item.item_checklist.pk)
         else:
             return redirect('cl_app:user_checklists')
     else:

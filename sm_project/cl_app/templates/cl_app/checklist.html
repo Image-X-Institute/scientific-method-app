@@ -14,6 +14,7 @@
             <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 1 %}"><button>Mark As Complete</button></a>
             <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 3 %}"><button>Mark As Incomplete</button></a>
         {% endif %}
+        <a href="{% url 'cl_app:remove_item' checklistitem.id %}"><button>Remove Item</button></a>
     </li>
 {% endfor %}
 </ul>

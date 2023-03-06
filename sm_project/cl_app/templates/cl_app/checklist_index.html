@@ -4,7 +4,7 @@
 <ul>
 {% for checklist in user.checklist_set.all %}
     <li>
-        {{ checklist.checklist_title }}
+        {{ checklist.checklist_title }} - Creator: {{ checklist.creator.name }}
         <a href="{% url 'cl_app:checklist' checklist.id %}"><button>Open Checklist</button></a>
         {% if checklist.creator == user %}
             <a href="{% url 'cl_app:remove_checklist' checklist.id %}"><button>Delete Checklist</button></a>

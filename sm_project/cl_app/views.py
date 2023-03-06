@@ -19,7 +19,7 @@ def add_checklist(request):
         if request.user.has_temp_checklist():
             temp_checklist = request.user.get_temp_checklist()
         else:
-            temp_checklist = Checklist(checklist_title = ("Temp" + str(request.user.id)), creator = request.user)
+            temp_checklist = Checklist(checklist_title = (f"Temp{request.user.id}"), creator = request.user)
             temp_checklist.save()
         if request.method == "POST":
             checklist_form = ChecklistForm(request.POST)

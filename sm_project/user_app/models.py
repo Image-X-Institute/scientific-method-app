@@ -89,7 +89,7 @@ class User(AbstractBaseUser):
         return self.admin
     
     def has_temp_checklist(self):
-        return self.creator.filter(checklist_title=("Temp" + str(self.id))).exists()
+        return self.creator.filter(checklist_title=(f"Temp{self.id}")).exists()
     
     def get_temp_checklist(self):
-        return self.creator.get(checklist_title=("Temp" + str(self.id)))
+        return self.creator.get(checklist_title=(f"Temp{self.id}"))

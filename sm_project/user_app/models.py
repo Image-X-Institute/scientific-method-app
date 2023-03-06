@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.shortcuts import get_object_or_404
 
 
 """A custom user manager class for the new user class.
@@ -51,9 +52,15 @@ Methods
 __str__(self)
     Returns the email of the user.
 is_staff(self)
-    Returns whether the user is considered an staff member
+    Returns whether the user is considered an staff member.
 is_admin(self)
-    Returns whether the user is considered an admin
+    Returns whether the user is considered an admin.
+has_temp_checklist(self)
+    Returns whether the checklist that is used to store temporary checklist items as part of checklist creation exists.
+    See add_checklist(request) and add_temp_item(request) in cl_app/views.py for more.
+get_temp_checklist(self)
+    Returns the checklist that is used to store temporary checklist items as part of checklist creation.
+    See add_checklist(request) and add_temp_item(request) in cl_app/views.py for more.
 """
 class User(AbstractBaseUser):
     username = None
@@ -81,3 +88,9 @@ class User(AbstractBaseUser):
     @property
     def is_admin(self):
         return self.admin
+    
+    def has_temp_checklist(self):
+        return self.creator.filter(checklist_title=(f"Temp{self.id}")).exists()
+    
+    def get_temp_checklist(self):
+        return get_object_or_404(self.creator, checklist_title=(f"Temp{self.id}"))

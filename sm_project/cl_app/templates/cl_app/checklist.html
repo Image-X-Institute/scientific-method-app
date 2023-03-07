@@ -4,6 +4,7 @@
     <h1>{{ checklist.checklist_title }} - Reviewer View</h1>
 {% endif %}
 <h3>Created By: {{ checklist.creator.name }}</h3>
+<a href="{% url 'cl_app:edit_checklist' checklist.id %}"><button>Edit Checklist</button></a>
 <ul>
 {% for checklistitem in checklist.checklistitem_set.all %}
     <li>
@@ -14,13 +15,7 @@
             <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 1 %}"><button>Mark As Complete</button></a>
             <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 3 %}"><button>Mark As Incomplete</button></a>
         {% endif %}
-        <a href="{% url 'cl_app:remove_item' checklistitem.id %}"><button>Remove Item</button></a>
     </li>
 {% endfor %}
 </ul>
-<form action="{% url 'cl_app:add_item' checklist.id %}" method="POST">
-    {% csrf_token %}
-    {{ item_form }}
-    <button type="submit">Create Item</button>
-</form>
 <a href="{% url 'cl_app:user_checklists' %}"><button>Back</button></a>

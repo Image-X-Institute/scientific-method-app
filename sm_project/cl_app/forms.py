@@ -13,7 +13,8 @@ class ChecklistForm(forms.ModelForm):
     checklist_users = forms.ModelMultipleChoiceField(
         label="Checklist Users",
         queryset=User.objects.all(),
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.MultipleHiddenInput(),
+        required=False,
     )
     researchers = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),

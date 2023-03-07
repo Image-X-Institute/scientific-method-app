@@ -3,22 +3,22 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User
 
 
+# Organises how the User information is displayed on the admin site.
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
-        (None, {'fields': ('email', 'name', 'password')}),
-        ('Personal info', {'fields': ()}),
+        (None, {'fields': ('name', 'email', 'password')}),
         ('Permissions', {'fields': ('admin',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'name', 'password1', 'password2')
+            'fields': ('name', 'email', 'password1', 'password2')
         }),
     )
-    list_display = ['email', 'name', 'admin']
+    list_display = ['name', 'email', 'admin']
     list_filter = ['admin']
-    search_fields = ['email']
-    ordering = ['email']
+    search_fields = ['name', 'email']
+    ordering = ['name', 'email']
     filter_horizontal = ()
 
 

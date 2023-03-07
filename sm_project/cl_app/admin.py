@@ -1,7 +1,52 @@
 from django.contrib import admin
+from .forms import ChecklistForm
 from .models import Checklist, ChecklistItem
 
 
+# Creates a list filter that filters by specific users and displays which both the user's name and email 
+class UserFilter(admin.SimpleListFilter):
+    title = 'User'
+    parameter_name = 'user'
+
+    def lookups(self, request, model_admin):
+        users = set()
+        for user_sets in model_admin.model.objects.all():
+            for user in user_sets.checklist_users.all():
+                users.add(user)
+        return [(user.id, (user.name + " - " + user.email)) for user in users]
+    
+    def queryset(self, request, queryset):
+        if self.value() == None:
+            return queryset.all()
+        else:
+            return queryset.filter(checklist_users__id = self.value())
+
+# Organises how the information about each checklist is displayed on the admin site.
+class ChecklistAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+        'fields': ('checklist_title', 'creator', 'checklist_users', 'researchers', 'reviewers')
+        }),
+    )
+    list_display = ['checklist_title', 'creator_name']
+    list_filter = [UserFilter]
+    search_fields = ['checklist_title', 'creator_name']
+    ordering = ['checklist_title']
+    form = ChecklistForm
+
+# Organises how the information about each checklist item is displayed on the admin site.
+class ChecklistItemAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {
+        'fields': ('item_title', 'item_checklist', 'item_status')
+        }),
+    )
+    list_display = ['item_title', 'item_checklist', 'item_status']
+    list_filter = ['item_status', 'item_checklist']
+    search_fields = ['item_title']
+    ordering = ['item_checklist', 'item_title']
+
+
 # Adds the Checklist and ChecklistItem models to the admin page
-admin.site.register(Checklist)
-admin.site.register(ChecklistItem)
+admin.site.register(Checklist, ChecklistAdmin)
+admin.site.register(ChecklistItem, ChecklistItemAdmin)

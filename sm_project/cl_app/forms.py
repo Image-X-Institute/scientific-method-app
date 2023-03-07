@@ -4,7 +4,7 @@ from ..user_app.models import User
 
 
 class ChecklistForm(forms.ModelForm):
-
+    # Organises how the Checklist creation form will be set up
     class Meta:
         model = Checklist
         fields = ['checklist_title', 'researchers', 'reviewers']
@@ -25,7 +25,7 @@ class ChecklistForm(forms.ModelForm):
     )
 
 class ChecklistItemForm(forms.ModelForm):
-
+    # Organises how the ChecklistItem creation form will be set up
     class Meta:
         model = ChecklistItem
         fields = ['item_title']

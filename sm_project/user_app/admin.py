@@ -3,8 +3,8 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User
 
 
-# Organises how the User information is displayed on the admin site.
 class UserAdmin(BaseUserAdmin):
+    # Organises how the User information is displayed on the admin site.
     fieldsets = (
         (None, {'fields': ('name', 'email', 'password')}),
         ('Permissions', {'fields': ('admin',)}),
@@ -22,4 +22,5 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+# Adds the User model to the admin page
 admin.site.register(User, UserAdmin)

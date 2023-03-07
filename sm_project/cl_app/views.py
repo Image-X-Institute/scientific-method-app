@@ -3,8 +3,8 @@ from .models import Checklist, ChecklistItem
 from .forms import ChecklistForm, ChecklistItemForm
 
 
-# Renders a view of all the checklists that the user has.
 def checklist_index(request):
+    # Renders a view of all the checklists that the user has.
     if request.user.is_authenticated:
         if request.user.has_temp_checklist():
             request.user.get_temp_checklist().delete()
@@ -12,8 +12,8 @@ def checklist_index(request):
     else:
         return redirect('user_app:login')
     
-# Renders a view of the add checklist screen and allows the user to create a new checklist.
 def add_checklist(request):
+    # Renders a view of the add checklist screen and allows the user to create a new checklist.
     if request.user.is_authenticated:
         item_form = ChecklistItemForm()
         if request.user.has_temp_checklist():
@@ -45,8 +45,8 @@ def add_checklist(request):
     else:
         return redirect('user_app:login')
 
-# Adds an item to a checklist that is used to store the checklist items until the user finalises the details of the checklist.
 def add_temp_item(request):
+    # Adds an item to a checklist that is used to store the checklist items until the user finalises the details of the checklist.  
     if request.user.is_authenticated:
         temp_checklist = request.user.get_temp_checklist()
         if request.method == "POST":
@@ -61,14 +61,14 @@ def add_temp_item(request):
     else:
         return redirect('user_app:login')
 
-"""Removes an item from the temporary storage checklist.
-
-Parameters
-----------
-item_id: int
-    The id of the temporary checklist item.
-"""
 def remove_temp_item(request, item_id):
+    """Removes an item from the temporary storage checklist.
+
+    Parameters
+    ----------
+    item_id: int
+        The id of the temporary checklist item.
+    """
     if request.user.is_authenticated:
         item = get_object_or_404(ChecklistItem, pk=item_id)
         item_checklist = request.user.get_temp_checklist()
@@ -78,14 +78,14 @@ def remove_temp_item(request, item_id):
     else:
         return redirect('user_app:login')
 
-"""Allows the user to remove themselves from a checklist's list of users.
-
-Parameters
-----------
-checklist_id: int
-    The id of the checklist that the user is leaving
-"""
 def leave_checklist(request, checklist_id):
+    """Allows the user to remove themselves from a checklist's list of users.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist that the user is leaving
+    """
     if request.user.is_authenticated:
         checklist = get_object_or_404(Checklist, pk=checklist_id)
         if checklist.creator != request.user and checklist.checklist_users.contains(request.user):
@@ -98,14 +98,14 @@ def leave_checklist(request, checklist_id):
     else:
         return redirect('user_app:login')
 
-"""Allows the creator of a checklist to delete said checklist.
-
-Parameters
-----------
-checklist_id: int
-    The id of the checklist
-"""
 def remove_checklist(request, checklist_id):
+    """Allows the creator of a checklist to delete said checklist.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """
     if request.user.is_authenticated:
         checklist = get_object_or_404(Checklist, pk=checklist_id)
         if checklist.creator == request.user:
@@ -114,14 +114,14 @@ def remove_checklist(request, checklist_id):
     else:
         return redirect('user_app:login')
 
-"""Renders a view of the checklist with the corresponding id.
-
-Parameters
-----------
-checklist_id: int
-    The id of the checklist
-"""
 def checklist_view(request, checklist_id):
+    """Renders a view of the checklist with the corresponding id.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """
     if request.user.is_authenticated:
         checklist = get_object_or_404(Checklist, pk=checklist_id)
         if checklist.checklist_users.contains(request.user):
@@ -132,14 +132,14 @@ def checklist_view(request, checklist_id):
     else:
         return redirect('user_app:login')
 
-"""Adds a checklist item to the checklist with the corresponding id.
-
-Parameters
-----------
-checklist_id: int
-    The id of the checklist
-"""  
 def add_item(request, checklist_id):
+    """Adds a checklist item to the checklist with the corresponding id.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """  
     if request.user.is_authenticated:
         checklist = get_object_or_404(Checklist, pk=checklist_id)
         if checklist.checklist_users.contains(request.user):
@@ -160,14 +160,14 @@ def add_item(request, checklist_id):
     else:
         return redirect('user_app:login')
 
-"""Removes a checklist item of the checklist with the corresponding id.
-
-Parameters
-----------
-checklist_id: int
-    The id of the checklist
-"""  
 def remove_item(request, checklistitem_id):
+    """Removes a checklist item of the checklist with the corresponding id.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """  
     if request.user.is_authenticated:
         item = get_object_or_404(ChecklistItem, pk=checklistitem_id)
         if item.item_checklist.checklist_users.contains(request.user):
@@ -178,18 +178,18 @@ def remove_item(request, checklistitem_id):
     else:
         return redirect('user_app:login')
 
-"""Updates the status of a given checklist item.
-
-Parameters
-----------
-checklist_id: int
-    The id of the checklist that has the item
-checklistitem_id: int
-    The id of the checklist item
-value: int
-    An int indictating the status that the given item needs to be updated to.
-"""
 def update_item_status(request, checklist_id, checklistitem_id, value):
+    """Updates the status of a given checklist item.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist that has the item
+    checklistitem_id: int
+        The id of the checklist item
+    value: int
+        An int indictating the status that the given item needs to be updated to.
+    """
     if request.user.is_authenticated:
         checklist = get_object_or_404(Checklist, pk=checklist_id)
         if (checklist.researchers.contains(request.user) and value == 2) or \

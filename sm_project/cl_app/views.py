@@ -145,6 +145,14 @@ def update_item_status(request, checklist_id, checklistitem_id, value):
 
 @login_required(login_url='user_app:login')
 def edit_checklist(request, checklist_id):
+    """Renders a view of the edit_checklist page. 
+    Upon submission of the form, the checklist will be updated with the new information.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist that's being edited.
+    """
     checklist = get_object_or_404(Checklist, pk=checklist_id)
     if checklist.checklist_users.contains(request.user):
         item_form = ChecklistItemForm()

@@ -25,6 +25,20 @@ class ChecklistForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple
     )
 
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(ChecklistForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        researchers = self.cleaned_data['researchers']
+        reviewers = self.cleaned_data['reviewers']
+
+        if self.user not in researchers and self.user not in reviewers:
+            raise forms.ValidationError("Please include the creator of the checklist in either researchers or reviewers.")
+            
+            
+
+
 class ChecklistItemForm(forms.ModelForm):
 
     class Meta:

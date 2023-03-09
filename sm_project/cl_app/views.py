@@ -73,7 +73,6 @@ def remove_temp_item(request, item_id):
     return redirect('cl_app:add_checklist')
 
 """Allows the user to remove themselves from a checklist's list of users.
-
 Parameters
 ----------
 checklist_id: int

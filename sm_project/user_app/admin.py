@@ -4,7 +4,7 @@ from .models import User
 
 
 class UserAdmin(BaseUserAdmin):
-    # Organises how the User information is displayed on the admin site.
+    """Organises how the User information is displayed on the admin site."""
     fieldsets = (
         (None, {'fields': ('name', 'email', 'password')}),
         ('Permissions', {'fields': ('admin',)}),

@@ -6,14 +6,14 @@ from .forms import ChecklistForm, ChecklistItemForm
 
 @login_required(login_url='user_app:login')
 def checklist_index(request):
-    # Renders a view of all the checklists that the user has.
+    """Renders a view of all the checklists that the user has."""
     if request.user.has_temp_checklist():
         request.user.get_temp_checklist().delete()
     return render(request, 'cl_app/checklist_index.html', {'user_checklists': request.user})
     
 @login_required(login_url='user_app:login')
 def add_checklist(request):
-    # Renders a view of the add checklist screen and allows the user to create a new checklist.
+    """Renders a view of the add checklist screen and allows the user to create a new checklist."""
     item_form = ChecklistItemForm()
     if request.user.has_temp_checklist():
         temp_checklist = request.user.get_temp_checklist()
@@ -44,7 +44,7 @@ def add_checklist(request):
 
 @login_required(login_url='user_app:login')
 def add_temp_item(request):
-    # Adds an item to a checklist that is used to store the checklist items until the user finalises the details of the checklist.
+    """Adds an item to a checklist that is used to store the checklist items until the user finalises the details of the checklist."""
     temp_checklist = request.user.get_temp_checklist()
     if request.method == "POST":
         item_form = ChecklistItemForm(request.POST)

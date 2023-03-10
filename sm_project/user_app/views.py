@@ -5,9 +5,9 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
 
 
-# Renders a view of the login screen and authenticates that the user's details are in the system.
 @csrf_protect
 def login_request(request):
+    """Renders a view of the login screen and authenticates that the user's details are in the system."""
     if request.method == "POST":
         login_form = AuthenticationForm(request, request.POST)
         if login_form.is_valid():

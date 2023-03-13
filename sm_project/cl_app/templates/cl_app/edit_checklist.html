@@ -1,0 +1,21 @@
+<h1>Edit {{ checklist.checklist_title }}</h1>
+<form id="edit_checklist" action="{% url 'cl_app:edit_checklist' checklist.id %}" method="POST">
+    {% csrf_token %}
+    {{ checklist_form.as_p }}
+</form>
+<h3>Checklist Items</h3>
+<ul>
+    {% for item in checklist.checklistitem_set.all %}
+        <li>
+            {{ item.item_title }}
+            <a href="{% url 'cl_app:remove_item' item.id %}"><button>Remove Item</button></a>
+        </li>
+    {% endfor %}
+    </ul>
+    <form action="{% url 'cl_app:add_item' checklist.id %}" method="POST">
+        {% csrf_token %}
+        {{ item_form }}
+        <button type="submit">Add Item</button>
+    </form>
+<button type="submit" form="edit_checklist">Update Checklist</button>
+<a href="{% url 'cl_app:checklist' checklist.id %}"><button>Back</button></a>

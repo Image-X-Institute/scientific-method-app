@@ -13,7 +13,8 @@ class ChecklistForm(forms.ModelForm):
     checklist_users = forms.ModelMultipleChoiceField(
         label="Checklist Users",
         queryset=User.objects.all(),
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.MultipleHiddenInput(),
+        required=False,
     )
     researchers = forms.ModelMultipleChoiceField(
         queryset=User.objects.all(),
@@ -23,6 +24,20 @@ class ChecklistForm(forms.ModelForm):
         queryset=User.objects.all(),
         widget=forms.CheckboxSelectMultiple
     )
+
+    def clean(self):
+        cleaned_data = super(ChecklistForm, self).clean()
+        researchers = cleaned_data.get('researchers')
+        reviewers = cleaned_data.get('reviewers')
+        if Checklist.objects.filter(id=self.instance.pk).exists():
+            user = Checklist.objects.get(id=self.instance.pk).creator
+        else:
+            user = cleaned_data.get('creator')
+
+        if researchers and reviewers:
+            if user not in researchers and user not in reviewers:
+                raise forms.ValidationError("Please include the creator of the checklist in either researchers or reviewers.")
+        return self.cleaned_data
 
 class ChecklistItemForm(forms.ModelForm):
     """Organises how the ChecklistItem creation form will be set up"""

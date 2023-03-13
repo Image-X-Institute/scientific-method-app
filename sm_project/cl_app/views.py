@@ -21,7 +21,7 @@ def add_checklist(request):
         temp_checklist = Checklist(checklist_title = (f"Temp{request.user.id}"), creator = request.user)
         temp_checklist.save()
     if request.method == "POST":
-        checklist_form = ChecklistForm(request.POST)
+        checklist_form = ChecklistForm(data=request.POST)
         if checklist_form.is_valid():
             new_checklist = Checklist(
                 checklist_title = checklist_form.cleaned_data.get('checklist_title'), 
@@ -120,48 +120,6 @@ def checklist_view(request, checklist_id):
         return redirect('cl_app:user_checklists')
 
 @login_required(login_url='user_app:login')
-def add_item(request, checklist_id):
-    """Adds a checklist item to the checklist with the corresponding id.
-
-    Parameters
-    ----------
-    checklist_id: int
-        The id of the checklist
-    """  
-    checklist = get_object_or_404(Checklist, pk=checklist_id)
-    if checklist.checklist_users.contains(request.user):
-        if request.method == "POST":
-            item_form = ChecklistItemForm(request.POST)
-            if item_form.is_valid():
-                new_item = ChecklistItem(
-                    item_checklist = checklist,
-                    item_title = item_form.cleaned_data.get('item_title')
-                )
-                new_item.save()
-                item_form = ChecklistItemForm()
-        else:
-            item_form = ChecklistItemForm()
-        return redirect('cl_app:checklist', checklist_id)
-    else:
-        return redirect('cl_app:user_checklists')
-
-@login_required(login_url='user_app:login')
-def remove_item(request, checklistitem_id):
-    """Removes a checklist item of the checklist with the corresponding id.
-
-    Parameters
-    ----------
-    checklist_id: int
-        The id of the checklist
-    """  
-    item = get_object_or_404(ChecklistItem, pk=checklistitem_id)
-    if item.item_checklist.checklist_users.contains(request.user):
-        item.delete()
-        return redirect('cl_app:checklist', item.item_checklist.pk)
-    else:
-        return redirect('cl_app:user_checklists')
-
-@login_required(login_url='user_app:login')
 def update_item_status(request, checklist_id, checklistitem_id, value):
     """Updates the status of a given checklist item.
 
@@ -183,4 +141,81 @@ def update_item_status(request, checklist_id, checklistitem_id, value):
         return redirect('cl_app:checklist', checklist_id=checklist_id)
     else:
         return redirect('cl_app:user_checklists')
-    
+
+@login_required(login_url='user_app:login')
+def edit_checklist(request, checklist_id):
+    """Renders a view of the edit_checklist page. 
+    Upon submission of the form, the checklist will be updated with the new information.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist that's being edited.
+    """
+    checklist = get_object_or_404(Checklist, pk=checklist_id)
+    if checklist.checklist_users.contains(request.user):
+        item_form = ChecklistItemForm()
+        if request.method == "POST":
+            checklist_form = ChecklistForm(data=request.POST)
+            if checklist_form.is_valid():
+                checklist.checklist_title = checklist_form.cleaned_data.get('checklist_title')
+                checklist.researchers.set(checklist_form.cleaned_data.get('researchers'))
+                checklist.reviewers.set(checklist_form.cleaned_data.get('reviewers'))
+                checklist.checklist_users.set(checklist.researchers.all().union(checklist.reviewers.all()))
+                checklist.save()
+                return redirect('cl_app:checklist', checklist.id)
+        else:
+            checklist_form = ChecklistForm(initial={
+                'checklist_title': checklist.checklist_title, 
+                'researchers': [researcher.id for researcher in checklist.researchers.all()], 
+                'reviewers': [reviewer.id for reviewer in checklist.reviewers.all()], 
+            })
+        return render(
+            request, 
+            'cl_app/edit_checklist.html', 
+            {'checklist': checklist, 'checklist_form': checklist_form, 'item_form': item_form},
+        )
+    else:
+        return redirect('cl_app:user_checklists')
+
+@login_required(login_url='user_app:login')
+def add_item(request, checklist_id):
+    """Adds a checklist item to the checklist with the corresponding id.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """  
+    checklist = get_object_or_404(Checklist, pk=checklist_id)
+    if checklist.checklist_users.contains(request.user):
+        if request.method == "POST":
+            item_form = ChecklistItemForm(request.POST)
+            if item_form.is_valid():
+                new_item = ChecklistItem(
+                    item_checklist = checklist,
+                    item_title = item_form.cleaned_data.get('item_title')
+                )
+                new_item.save()
+                item_form = ChecklistItemForm()
+        else:
+            item_form = ChecklistItemForm()
+        return redirect('cl_app:edit_checklist', checklist_id)
+    else:
+        return redirect('cl_app:user_checklists')
+
+@login_required(login_url='user_app:login')
+def remove_item(request, checklistitem_id):
+    """Removes a checklist item of the checklist with the corresponding id.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """  
+    item = get_object_or_404(ChecklistItem, pk=checklistitem_id)
+    if item.item_checklist.checklist_users.contains(request.user):
+        item.delete()
+        return redirect('cl_app:edit_checklist', item.item_checklist.pk)
+    else:
+        return redirect('cl_app:user_checklists')

@@ -28,11 +28,16 @@ class ChecklistAdmin(admin.ModelAdmin):
         'fields': ('checklist_title', 'creator', 'checklist_users', 'researchers', 'reviewers')
         }),
     )
+    readonly_fields = ['checklist_users']
     list_display = ['checklist_title', 'creator_name']
     list_filter = [UserFilter]
     search_fields = ['checklist_title', 'creator_name']
     ordering = ['checklist_title']
     form = ChecklistForm
+
+    def save_model(self, request, obj, form, change):
+        self.model.checklist_users = form.cleaned_data.get('researchers').union(form.cleaned_data.get('reviewers'))
+        return super().save_model(request, obj, form, change)
 
 class ChecklistItemAdmin(admin.ModelAdmin):
     """Organises how the information about each checklist item is displayed on the admin site."""

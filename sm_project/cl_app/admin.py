@@ -25,7 +25,7 @@ class ChecklistAdmin(admin.ModelAdmin):
     """ Organises how the information about each checklist is displayed on the admin site. """
     fieldsets = (
         (None, {
-        'fields': ('checklist_title', 'creator', 'checklist_users', 'researchers', 'reviewers')
+        'fields': ('checklist_title', 'document', 'creator', 'checklist_users', 'researchers', 'reviewers')
         }),
     )
     readonly_fields = ['checklist_users']

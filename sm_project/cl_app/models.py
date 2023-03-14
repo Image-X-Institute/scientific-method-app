@@ -12,6 +12,8 @@ class Checklist(models.Model):
     ----------
     checklist_title: CharField
         The title of the checklist.
+    document: CharField
+        The link to the document the checklist is attributed to.
     creator: ForeignKey
         The creator of the checklist.
     checklist_users: ManyToManyField
@@ -29,6 +31,7 @@ class Checklist(models.Model):
         Returns the name of the creator of the checklist.
     """
     checklist_title = models.CharField(verbose_name="Checklist", max_length=200)
+    document = models.URLField(verbose_name="Document Link", max_length=150, blank=True)
     creator = models.ForeignKey(User, verbose_name="Creator Email", on_delete=models.CASCADE, related_name='creator')
     checklist_users = models.ManyToManyField(User, verbose_name="Users")
     researchers = models.ManyToManyField(User, related_name='researchers')

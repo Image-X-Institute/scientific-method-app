@@ -7,9 +7,10 @@ class ChecklistForm(forms.ModelForm):
     """Organises how the Checklist creation form will be set up"""
     class Meta:
         model = Checklist
-        fields = ['checklist_title', 'researchers', 'reviewers']
+        fields = ['checklist_title', 'document', 'researchers', 'reviewers']
 
     checklist_title = forms.CharField(label="Checklist Title")
+    document = forms.URLField(label="Document Link", required=False)
     checklist_users = forms.ModelMultipleChoiceField(
         label="Checklist Users",
         queryset=User.objects.all(),

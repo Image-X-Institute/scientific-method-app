@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
+from .forms import NewUserForm
 
 
 @csrf_protect
@@ -25,3 +26,16 @@ def login_request(request):
     else:
         login_form = AuthenticationForm()
     return render(request, "user_app/login.html", {"login_form": login_form})
+
+def register_request(request):
+    """Renders a view of the user register screen and creates a new user upon the form being submitted."""
+    if request.method == "POST":
+        register_form = NewUserForm(data=request.POST)
+        if register_form.is_valid():
+            user = register_form.save()
+            login(request, user)
+            messages.success(request, "Account successfully created.")
+            return redirect("cl_app:user_checklists")
+    else:
+        register_form = NewUserForm()
+    return render(request, "user_app/register.html", {"register_form": register_form})

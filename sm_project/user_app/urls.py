@@ -6,4 +6,5 @@ app_name = 'user_app'
 # The urls that are a part of the app, "user_app"
 urlpatterns = [
     path("", views.login_request, name="login"),
+    path("register/", views.register_request, name="register")
 ]

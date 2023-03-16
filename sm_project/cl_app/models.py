@@ -12,7 +12,7 @@ class Checklist(models.Model):
     ----------
     checklist_title: CharField
         The title of the checklist.
-    document: CharField
+    document: URLField
         The link to the document the checklist is attributed to.
     creator: ForeignKey
         The creator of the checklist.

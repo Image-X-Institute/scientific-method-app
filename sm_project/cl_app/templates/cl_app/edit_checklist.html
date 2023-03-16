@@ -8,7 +8,7 @@
     {% for item in checklist.checklistitem_set.all %}
         <li>
             {{ item.item_title }}
-            <a href="{% url 'cl_app:remove_item' item.id %}"><button>Remove Item</button></a>
+            <a href="{% url 'cl_app:remove_item' item.id %}"><button onclick="return confirm('Are you sure?')">Remove Item</button></a>
         </li>
     {% endfor %}
     </ul>

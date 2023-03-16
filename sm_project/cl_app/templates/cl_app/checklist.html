@@ -8,7 +8,11 @@
 <ul>
 {% for checklistitem in checklist.checklistitem_set.all %}
     <li>
-        {{ checklistitem.item_title }} - {{ checklistitem.get_status }}
+        {% if checklistitem.estimate is None %}
+            {{ checklistitem.item_title }} - {{ checklistitem.get_status }}
+        {% else %}
+            {{ checklistitem.item_title }} - {{ checklistitem.get_status }} - Expected to Be Completed By: {{ checklistitem.estimate }}
+        {% endif %}
         {% if checklist in user.researchers.all and checklistitem.item_status != 2 %}
             <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 2 %}"><button>Request Review</button></a>
         {% elif checklist in user.reviewers.all and checklistitem.item_status == 2 %}

@@ -43,10 +43,10 @@ class ChecklistItemAdmin(admin.ModelAdmin):
     """Organises how the information about each checklist item is displayed on the admin site."""
     fieldsets = (
         (None, {
-        'fields': ('item_title', 'item_checklist', 'item_status')
+        'fields': ('item_title', 'item_checklist', 'item_status', 'estimate')
         }),
     )
-    list_display = ['item_title', 'item_checklist', 'item_status']
+    list_display = ['item_title', 'item_checklist', 'item_status', 'estimate']
     list_filter = ['item_status', 'item_checklist']
     search_fields = ['item_title']
     ordering = ['item_checklist', 'item_title']

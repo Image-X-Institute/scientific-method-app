@@ -7,15 +7,20 @@
 <ul>
     {% for item in temp_checklist.checklistitem_set.all %}
         <li>
-            {{ item.item_title }}
+            {% if item.time_estimate is None %}
+                {{ item.item_title }} - {{ item.get_status }}
+            {% else %}
+                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}
+            {% endif %}
             <a href="{% url 'cl_app:remove_temp_item' item.id %}"><button>Remove Item</button></a>
         </li>
     {% endfor %}
-    </ul>
-    <form action="{% url 'cl_app:add_temp_item' %}" method="POST">
-        {% csrf_token %}
-        {{ item_form }}
-        <button type="submit">Add Item</button>
-    </form>
+</ul>
+<h4>Add Checklist Item</h4>
+<form action="{% url 'cl_app:add_temp_item' %}" method="POST">
+    {% csrf_token %}
+    {{ item_form.as_p }}
+    <button type="submit">Add Item</button>
+</form>
 <button type="submit" form="add_checklist">Create Checklist</button>
 <a href="{% url 'cl_app:user_checklists' %}"><button>Back</button></a>

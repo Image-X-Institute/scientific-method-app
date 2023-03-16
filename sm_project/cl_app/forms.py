@@ -52,6 +52,7 @@ class ChecklistItemForm(forms.ModelForm):
     """Organises how the ChecklistItem creation form will be set up"""
     class Meta:
         model = ChecklistItem
-        fields = ['item_title']
+        fields = ['item_title', 'time_estimate']
     
-    item_title = forms.CharField(label="Add Item")
+    item_title = forms.CharField(label="Item Title")
+    time_estimate = forms.DateField(label="Estimated Completion Date", required=False, widget=forms.SelectDateWidget)

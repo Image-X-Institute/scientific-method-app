@@ -57,6 +57,9 @@ class ChecklistItem(models.Model):
     item_status: IntegerField
        The status of an item as an integer. The available choices can be found in the class, Status.
        The default status is INCOMPLETE or 3.
+    time_estimate: DateField
+        The estimated date that the checklist item is expected to be marked as complete by.
+        This attribute is optional.
 
     Methods
     -------
@@ -74,6 +77,7 @@ class ChecklistItem(models.Model):
     item_checklist = models.ForeignKey(Checklist, verbose_name="Checklist", on_delete=models.CASCADE)
     item_title = models.CharField(verbose_name="Checklist Item", max_length=200)
     item_status = models.IntegerField(verbose_name="Status", choices=Status.choices, default=Status.INCOMPLETE)
+    time_estimate = models.DateField(verbose_name="Estimated Completion Date", null=True, blank=True)
 
     def __str__(self):
         return self.item_title

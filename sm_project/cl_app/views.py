@@ -21,7 +21,7 @@ def add_checklist(request):
         temp_checklist = Checklist(checklist_title = (f"Temp{request.user.id}"), creator = request.user)
         temp_checklist.save()
     if request.method == "POST":
-        checklist_form = ChecklistForm(data=request.POST)
+        checklist_form = ChecklistForm(data=request.POST, initial={'creator': request.user})
         if checklist_form.is_valid():
             new_checklist = Checklist(
                 checklist_title = checklist_form.cleaned_data.get('checklist_title'), 
@@ -35,7 +35,7 @@ def add_checklist(request):
             temp_checklist.delete()
             return redirect('cl_app:user_checklists')
     else:
-        checklist_form = ChecklistForm()
+        checklist_form = ChecklistForm(initial={'creator': request.user})
     return render(
         request, 
         'cl_app/add_checklist.html', 
@@ -156,7 +156,7 @@ def edit_checklist(request, checklist_id):
     if checklist.checklist_users.contains(request.user):
         item_form = ChecklistItemForm()
         if request.method == "POST":
-            checklist_form = ChecklistForm(data=request.POST)
+            checklist_form = ChecklistForm(data=request.POST, initial={'creator': request.user})
             if checklist_form.is_valid():
                 checklist.checklist_title = checklist_form.cleaned_data.get('checklist_title')
                 checklist.researchers.set(checklist_form.cleaned_data.get('researchers'))
@@ -167,6 +167,7 @@ def edit_checklist(request, checklist_id):
         else:
             checklist_form = ChecklistForm(initial={
                 'checklist_title': checklist.checklist_title, 
+                'creator': request.user,
                 'researchers': [researcher.id for researcher in checklist.researchers.all()], 
                 'reviewers': [reviewer.id for reviewer in checklist.reviewers.all()], 
             })

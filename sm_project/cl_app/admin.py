@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .forms import ChecklistForm
+from .forms import ChecklistAdminForm
 from .models import Checklist, ChecklistItem
 
 
@@ -33,11 +33,11 @@ class ChecklistAdmin(admin.ModelAdmin):
     list_filter = [UserFilter]
     search_fields = ['checklist_title', 'creator_name']
     ordering = ['checklist_title']
-    form = ChecklistForm
+    form = ChecklistAdminForm
 
     def save_model(self, request, obj, form, change):
-        self.model.checklist_users = form.cleaned_data.get('researchers').union(form.cleaned_data.get('reviewers'))
-        return super().save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
+        obj.checklist_users.set(form.cleaned_data.get('researchers').union(form.cleaned_data.get('reviewers')))
 
 class ChecklistItemAdmin(admin.ModelAdmin):
     """Organises how the information about each checklist item is displayed on the admin site."""

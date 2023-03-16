@@ -7,12 +7,15 @@ class ChecklistForm(forms.ModelForm):
     """Organises how the Checklist creation form will be set up"""
     class Meta:
         model = Checklist
-        fields = ['checklist_title', 'document', 'researchers', 'reviewers']
+        fields = ['checklist_title', 'document', 'creator', 'checklist_users', 'researchers', 'reviewers']
 
     checklist_title = forms.CharField(label="Checklist Title")
     document = forms.URLField(label="Document Link", required=False)
+    creator = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.HiddenInput(),
+    )
     checklist_users = forms.ModelMultipleChoiceField(
-        label="Checklist Users",
         queryset=User.objects.all(),
         widget=forms.MultipleHiddenInput(),
         required=False,
@@ -30,15 +33,20 @@ class ChecklistForm(forms.ModelForm):
         cleaned_data = super(ChecklistForm, self).clean()
         researchers = cleaned_data.get('researchers')
         reviewers = cleaned_data.get('reviewers')
-        if Checklist.objects.filter(id=self.instance.pk).exists():
-            user = Checklist.objects.get(id=self.instance.pk).creator
-        else:
-            user = cleaned_data.get('creator')
+        user = cleaned_data.get('creator')
 
-        if researchers and reviewers:
+        if researchers and reviewers and user:
             if user not in researchers and user not in reviewers:
                 raise forms.ValidationError("Please include the creator of the checklist in either researchers or reviewers.")
         return self.cleaned_data
+    
+class ChecklistAdminForm(ChecklistForm):
+    """Organises how the Checklist creation form on the admin page will be set up"""
+
+    creator = forms.ModelChoiceField(
+        label="Creator Email", 
+        queryset=User.objects.all(),
+    )
 
 class ChecklistItemForm(forms.ModelForm):
     """Organises how the ChecklistItem creation form will be set up"""

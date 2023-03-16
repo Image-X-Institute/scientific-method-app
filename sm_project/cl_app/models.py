@@ -33,7 +33,7 @@ class Checklist(models.Model):
     checklist_title = models.CharField(verbose_name="Checklist", max_length=200)
     document = models.URLField(verbose_name="Document Link", max_length=150, blank=True)
     creator = models.ForeignKey(User, verbose_name="Creator Email", on_delete=models.CASCADE, related_name='creator')
-    checklist_users = models.ManyToManyField(User, verbose_name="Users")
+    checklist_users = models.ManyToManyField(User, verbose_name="Checklist Users")
     researchers = models.ManyToManyField(User, related_name='researchers')
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True)
 

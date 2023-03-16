@@ -7,7 +7,7 @@
 <ul>
     {% for item in checklist.checklistitem_set.all %}
         <li>
-            {% if item.estimate is not None %}
+            {% if item.estimate is None %}
                 {{ item.item_title }} - {{ item.get_status }}
             {% else %}
                 {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.estimate }}

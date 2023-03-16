@@ -7,10 +7,10 @@
 <ul>
     {% for item in checklist.checklistitem_set.all %}
         <li>
-            {% if item.estimate is None %}
+            {% if item.time_estimate is None %}
                 {{ item.item_title }} - {{ item.get_status }}
             {% else %}
-                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.estimate }}
+                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}
             {% endif %}
             <a href="{% url 'cl_app:remove_item' item.id %}"><button>Remove Item</button></a>
         </li>

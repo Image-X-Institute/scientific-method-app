@@ -52,7 +52,7 @@ def add_temp_item(request):
             new_item = ChecklistItem(
                 item_checklist = temp_checklist,
                 item_title = item_form.cleaned_data.get('item_title'),
-                estimate = item_form.cleaned_data.get('estimate')
+                time_estimate = item_form.cleaned_data.get('time_estimate')
             )
             new_item.save()
     return redirect('cl_app:add_checklist')
@@ -197,7 +197,7 @@ def add_item(request, checklist_id):
                 new_item = ChecklistItem(
                     item_checklist = checklist,
                     item_title = item_form.cleaned_data.get('item_title'),
-                    estimate = item_form.cleaned_data.get('estimate')
+                    time_estimate = item_form.cleaned_data.get('time_estimate')
                 )
                 new_item.save()
                 item_form = ChecklistItemForm()

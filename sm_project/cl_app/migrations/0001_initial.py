@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('item_title', models.CharField(max_length=200, verbose_name='Checklist Item')),
                 ('item_status', models.IntegerField(choices=[(1, 'Completed'), (2, 'For Review'), (3, 'Incomplete')], default=3, verbose_name='Status')),
-                ('estimate', models.DateField(blank=True, null=True, verbose_name='Estimated Completion Date')),
+                ('time_estimate', models.DateField(blank=True, null=True, verbose_name='Estimated Completion Date')),
                 ('item_checklist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='cl_app.checklist', verbose_name='Checklist')),
             ],
         ),

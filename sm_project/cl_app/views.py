@@ -117,6 +117,21 @@ def checklist_view(request, checklist_id):
         return render(request, 'cl_app/checklist.html', {'checklist': checklist})
     else:
         return redirect('cl_app:user_checklists')
+    
+@login_required(login_url='user_app:login')
+def open_document(request, checklist_id):
+    """Opens the document associated with the checklist in a new tab.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """
+    checklist = get_object_or_404(Checklist, pk=checklist_id)
+    if checklist.checklist_users.contains(request.user):
+        return redirect(checklist.document)
+    else:
+        return redirect('cl_app:user_checklists')
 
 @login_required(login_url='user_app:login')
 def update_item_status(request, checklist_id, checklistitem_id, value):

@@ -115,8 +115,7 @@ def checklist_view(request, checklist_id):
     """
     checklist = get_object_or_404(Checklist, pk=checklist_id)
     if checklist.checklist_users.contains(request.user):
-        item_form = ChecklistItemForm()
-        return render(request, 'cl_app/checklist.html', {'checklist': checklist, 'item_form': item_form})
+        return render(request, 'cl_app/checklist.html', {'checklist': checklist})
     else:
         return redirect('cl_app:user_checklists')
 

@@ -4,6 +4,9 @@
     <h1>{{ checklist.checklist_title }} - Reviewer View</h1>
 {% endif %}
 <h3>Created By: {{ checklist.creator.name }}</h3>
+{% if checklist.document != "" %}
+    <a href="{% url 'cl_app:open_document' checklist.id %}" target="_blank" rel="noopener noreferrer"><button>Open Associated Document</button></a>
+{% endif %}
 <a href="{% url 'cl_app:edit_checklist' checklist.id %}"><button>Edit Checklist</button></a>
 <ul>
 {% for checklistitem in checklist.checklistitem_set.all %}

@@ -8,27 +8,29 @@ class UserManager(BaseUserManager):
 
     Methods
     -------
-    create_user(self, email, password=None)
-        Creates a new user in the database using the given email and password.
-    create_superuser(self, email, password)
-        Creates a new admin user in the database using the given email and password.
+    create_user(self, email, name, password=None)
+        Creates a new user in the database using the given email, name and password.
+    create_superuser(self, email, name, password)
+        Creates a new admin user in the database using the given email, name and password.
     """
-    def create_user(self, email, password=None):
+    def create_user(self, email, name, password=None):
         if not email:
             raise ValueError('Users must have an email address')
 
         user = self.model(
             email=self.normalize_email(email),
+            name=name,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, email, name, password):
         user = self.create_user(
             email,
             password=password,
+            name=name,
         )
         user.admin = True
         user.save(using=self._db)
@@ -73,7 +75,7 @@ class User(AbstractBaseUser):
 
     # Sets the attribute used as the username to the email
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.email

@@ -21,7 +21,7 @@ def add_checklist(request):
         temp_checklist = Checklist(checklist_title = (f"Temp{request.user.id}"), creator = request.user)
         temp_checklist.save()
     if request.method == "POST":
-        checklist_form = ChecklistForm(data=request.POST)
+        checklist_form = ChecklistForm(data=request.POST, initial={'creator': request.user})
         if checklist_form.is_valid():
             new_checklist = Checklist(
                 checklist_title = checklist_form.cleaned_data.get('checklist_title'), 
@@ -35,7 +35,7 @@ def add_checklist(request):
             temp_checklist.delete()
             return redirect('cl_app:user_checklists')
     else:
-        checklist_form = ChecklistForm()
+        checklist_form = ChecklistForm(initial={'creator': request.user})
     return render(
         request, 
         'cl_app/add_checklist.html', 
@@ -51,7 +51,8 @@ def add_temp_item(request):
         if item_form.is_valid():
             new_item = ChecklistItem(
                 item_checklist = temp_checklist,
-                item_title = item_form.cleaned_data.get('item_title')
+                item_title = item_form.cleaned_data.get('item_title'),
+                time_estimate = item_form.cleaned_data.get('time_estimate')
             )
             new_item.save()
     return redirect('cl_app:add_checklist')
@@ -114,8 +115,22 @@ def checklist_view(request, checklist_id):
     """
     checklist = get_object_or_404(Checklist, pk=checklist_id)
     if checklist.checklist_users.contains(request.user):
-        item_form = ChecklistItemForm()
-        return render(request, 'cl_app/checklist.html', {'checklist': checklist, 'item_form': item_form})
+        return render(request, 'cl_app/checklist.html', {'checklist': checklist})
+    else:
+        return redirect('cl_app:user_checklists')
+    
+@login_required(login_url='user_app:login')
+def open_document(request, checklist_id):
+    """Opens the document associated with the checklist in a new tab.
+
+    Parameters
+    ----------
+    checklist_id: int
+        The id of the checklist
+    """
+    checklist = get_object_or_404(Checklist, pk=checklist_id)
+    if checklist.checklist_users.contains(request.user):
+        return redirect(checklist.document)
     else:
         return redirect('cl_app:user_checklists')
 
@@ -156,7 +171,7 @@ def edit_checklist(request, checklist_id):
     if checklist.checklist_users.contains(request.user):
         item_form = ChecklistItemForm()
         if request.method == "POST":
-            checklist_form = ChecklistForm(data=request.POST)
+            checklist_form = ChecklistForm(data=request.POST, initial={'creator': request.user})
             if checklist_form.is_valid():
                 checklist.checklist_title = checklist_form.cleaned_data.get('checklist_title')
                 checklist.researchers.set(checklist_form.cleaned_data.get('researchers'))
@@ -167,6 +182,7 @@ def edit_checklist(request, checklist_id):
         else:
             checklist_form = ChecklistForm(initial={
                 'checklist_title': checklist.checklist_title, 
+                'creator': request.user,
                 'researchers': [researcher.id for researcher in checklist.researchers.all()], 
                 'reviewers': [reviewer.id for reviewer in checklist.reviewers.all()], 
             })
@@ -194,7 +210,8 @@ def add_item(request, checklist_id):
             if item_form.is_valid():
                 new_item = ChecklistItem(
                     item_checklist = checklist,
-                    item_title = item_form.cleaned_data.get('item_title')
+                    item_title = item_form.cleaned_data.get('item_title'),
+                    time_estimate = item_form.cleaned_data.get('time_estimate')
                 )
                 new_item.save()
                 item_form = ChecklistItemForm()

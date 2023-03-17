@@ -12,6 +12,8 @@ class Checklist(models.Model):
     ----------
     checklist_title: CharField
         The title of the checklist.
+    document: URLField
+        The link to the document the checklist is attributed to.
     creator: ForeignKey
         The creator of the checklist.
     checklist_users: ManyToManyField
@@ -29,8 +31,9 @@ class Checklist(models.Model):
         Returns the name of the creator of the checklist.
     """
     checklist_title = models.CharField(verbose_name="Checklist", max_length=200)
+    document = models.URLField(verbose_name="Document Link", max_length=150, blank=True)
     creator = models.ForeignKey(User, verbose_name="Creator Email", on_delete=models.CASCADE, related_name='creator')
-    checklist_users = models.ManyToManyField(User, verbose_name="Users")
+    checklist_users = models.ManyToManyField(User, verbose_name="Checklist Users")
     researchers = models.ManyToManyField(User, related_name='researchers')
     reviewers = models.ManyToManyField(User, related_name='reviewers', blank=True)
 
@@ -54,6 +57,9 @@ class ChecklistItem(models.Model):
     item_status: IntegerField
        The status of an item as an integer. The available choices can be found in the class, Status.
        The default status is INCOMPLETE or 3.
+    time_estimate: DateField
+        The estimated date that the checklist item is expected to be marked as complete by.
+        This attribute is optional.
 
     Methods
     -------
@@ -71,6 +77,7 @@ class ChecklistItem(models.Model):
     item_checklist = models.ForeignKey(Checklist, verbose_name="Checklist", on_delete=models.CASCADE)
     item_title = models.CharField(verbose_name="Checklist Item", max_length=200)
     item_status = models.IntegerField(verbose_name="Status", choices=Status.choices, default=Status.INCOMPLETE)
+    time_estimate = models.DateField(verbose_name="Estimated Completion Date", null=True, blank=True)
 
     def __str__(self):
         return self.item_title

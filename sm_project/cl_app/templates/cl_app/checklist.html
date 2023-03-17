@@ -9,18 +9,18 @@
 {% endif %}
 <a href="{% url 'cl_app:edit_checklist' checklist.id %}"><button>Edit Checklist</button></a>
 <ul>
-{% for checklistitem in checklist.checklistitem_set.all %}
+{% for item in checklist.checklistitem_set.all %}
     <li>
-        {% if checklistitem.time_estimate is None %}
-            {{ checklistitem.item_title }} - {{ checklistitem.get_status }}
+        {% if item.time_estimate is None %}
+            {{ item.item_title }} - {{ item.get_status }}
         {% else %}
-            {{ checklistitem.item_title }} - {{ checklistitem.get_status }} - Expected to Be Completed By: {{ checklistitem.time_estimate }}
+            {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}
         {% endif %}
-        {% if checklist in user.researchers.all and checklistitem.item_status != 2 %}
-            <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 2 %}"><button>Request Review</button></a>
-        {% elif checklist in user.reviewers.all and checklistitem.item_status == 2 %}
-            <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 1 %}"><button>Mark As Complete</button></a>
-            <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 3 %}"><button>Mark As Incomplete</button></a>
+        {% if checklist in user.researchers.all and item.item_status != 2 %}
+            <a href="{% url 'cl_app:update_item_status' checklist.id item.id 2 %}"><button>Request Review</button></a>
+        {% elif checklist in user.reviewers.all and item.item_status == 2 %}
+            <a href="{% url 'cl_app:update_item_status' checklist.id item.id 1 %}"><button>Mark As Complete</button></a>
+            <a href="{% url 'cl_app:update_item_status' checklist.id item.id 3 %}"><button>Mark As Incomplete</button></a>
         {% endif %}
     </li>
 {% endfor %}

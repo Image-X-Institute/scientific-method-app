@@ -44,6 +44,12 @@ class Checklist(models.Model):
     @admin.display(description="Creator")
     def creator_name(self):
         return self.creator.name
+    
+    def reviewer_emails(self):
+        email_list = list()
+        for user in self.reviewers.all():
+            email_list.append(user.email)
+        return email_list
 
 class ChecklistItem(models.Model):
     """A model class used to represent the items in each of the checklists.

@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from .models import Checklist, ChecklistItem
 from .forms import ChecklistForm, ChecklistItemForm
+from ..settings import EMAIL_HOST_USER
 
 
 @login_required(login_url='user_app:login')
@@ -135,14 +137,15 @@ def open_document(request, checklist_id):
         return redirect('cl_app:user_checklists')
 
 @login_required(login_url='user_app:login')
-def update_item_status(request, checklist_id, checklistitem_id, value):
+def update_item_status(request, checklist_id, item_id, value):
     """Updates the status of a given checklist item.
+    If the status is updated to 'For Review', an email is sent notifying the reviewer.
 
     Parameters
     ----------
     checklist_id: int
         The id of the checklist that has the item
-    checklistitem_id: int
+    item_id: int
         The id of the checklist item
     value: int
         An int indictating the status that the given item needs to be updated to.
@@ -150,9 +153,16 @@ def update_item_status(request, checklist_id, checklistitem_id, value):
     checklist = get_object_or_404(Checklist, pk=checklist_id)
     if (checklist.researchers.contains(request.user) and value == 2) or \
         (checklist.reviewers.contains(request.user) and (value == 1 or value == 3)):
-        checklist_item = get_object_or_404(ChecklistItem, pk=checklistitem_id)
-        checklist_item.item_status = value
-        checklist_item.save()
+        item = get_object_or_404(ChecklistItem, pk=item_id)
+        item.item_status = value
+        item.save()
+        if checklist.researchers.contains(request.user) and value == 2 and EMAIL_HOST_USER != '':
+            subject=f"Review Requested for {item.item_title} in {checklist.checklist_title}"
+            message=f"{request.user.name} has requested that \"{item.item_title}\" as part of the checklist," +\
+                f"\"{checklist.checklist_title}\" be peer reviewed by a reviewer. Login to the checklist webapp for more." 
+            if checklist.document is not None:
+                message += f"\n\nFind the associated document at {checklist.document}"
+            send_mail(subject=subject, message=message, from_email=EMAIL_HOST_USER, recipient_list=checklist.reviewer_emails())
         return redirect('cl_app:checklist', checklist_id=checklist_id)
     else:
         return redirect('cl_app:user_checklists')

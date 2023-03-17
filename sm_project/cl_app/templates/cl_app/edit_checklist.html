@@ -22,5 +22,5 @@
     {{ item_form.as_p }}
     <button type="submit">Add Item</button>
 </form>
-<button type="submit" form="edit_checklist">Update Checklist</button>
+<button type="submit" form="edit_checklist" onclick="return confirm('Are you sure?')">Update Checklist</button>
 <a href="{% url 'cl_app:checklist' checklist.id %}"><button>Back</button></a>

@@ -141,6 +141,7 @@ def update_item_status(request, item_id):
     """Updates the status of a given checklist item.
     If the status is updated to 'For Review' and a email host has been set, an email is sent notifying the reviewers
     that a review has requested.
+    If the status is updated to 'Incomplete', the user will be redirected to a form to provide feedback with.
 
     Parameters
     ----------

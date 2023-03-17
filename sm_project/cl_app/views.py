@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from .models import Checklist, ChecklistItem
-from .forms import ChecklistForm, ChecklistItemForm
+from .forms import ChecklistForm, ChecklistItemForm, FeedbackForm
 from ..settings import EMAIL_HOST_USER
 
 
@@ -152,17 +152,48 @@ def update_item_status(request, item_id):
     value = int(request.POST.get("status"))
     if (checklist.researchers.contains(request.user) and value == 2) or \
         (checklist.reviewers.contains(request.user) and (value == 1 or value == 3)):
-        item = get_object_or_404(ChecklistItem, pk=item_id)
         item.item_status = value
         item.save()
         if value == 2 and EMAIL_HOST_USER != '':
             subject=f"Review Requested for {item.item_title} in {checklist.checklist_title}"
             message=f"{request.user.name} has requested that \"{item.item_title}\" as part of the checklist," +\
                 f"\"{checklist.checklist_title}\" be peer reviewed by a reviewer. Login to the checklist webapp for more." 
-            if checklist.document is not None:
+            if checklist.document != "":
                 message += f"\n\nFind the associated document at {checklist.document}"
-            send_mail(subject=subject, message=message, from_email=EMAIL_HOST_USER, recipient_list=checklist.reviewer_emails())
+            send_mail(subject, message, EMAIL_HOST_USER, checklist.reviewer_emails())
+        elif value == 3 and EMAIL_HOST_USER != '':
+            return redirect('cl_app:send_feedback', item_id=item_id)
         return redirect('cl_app:checklist', checklist_id=checklist.id)
+    else:
+        return redirect('cl_app:user_checklists')
+    
+@login_required(login_url='user_app:login')
+def send_feedback(request, item_id):
+    """Renders a view of the feedback page.
+    Upon submission of the form, an email featuring the reviewer's feedback will be sent to the researchers.
+
+    Parameters
+    ----------
+    item_id: int
+        The id of the checklist item whose status will be updated.
+    """
+    item = get_object_or_404(ChecklistItem, pk=item_id)
+    checklist = item.item_checklist
+    if checklist.reviewers.contains(request.user):
+        if request.method == "POST":
+            feedback_form = FeedbackForm(request.POST)
+            if feedback_form.is_valid():
+                subject = f"Feedback regarding {item.item_title} in {checklist.checklist_title}"
+                message = f"{request.user.name} has reviewed \"{item.item_title}\" as part of the checklist, " +\
+                    f"\"{checklist.checklist_title}\"and provided the following feedback: " +\
+                    f"\n\n{feedback_form.cleaned_data.get('feedback')}"
+                if checklist.document != "":
+                    message += f"\n\nFind the associated document at {checklist.document}"
+                send_mail(subject, message, EMAIL_HOST_USER, checklist.researcher_emails())
+                return redirect('cl_app:checklist', checklist_id=checklist.id)
+        else:
+            feedback_form = FeedbackForm()
+        return render(request, 'cl_app/feedback.html', {'item': item, 'feedback_form': feedback_form})
     else:
         return redirect('cl_app:user_checklists')
 

@@ -56,3 +56,6 @@ class ChecklistItemForm(forms.ModelForm):
     
     item_title = forms.CharField(label="Item Title")
     time_estimate = forms.DateField(label="Estimated Completion Date", required=False, widget=forms.SelectDateWidget)
+
+class FeedbackForm(forms.Form):
+    feedback = forms.CharField(label="", widget=forms.Textarea, max_length=2000)

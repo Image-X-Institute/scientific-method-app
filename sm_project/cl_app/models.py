@@ -45,6 +45,12 @@ class Checklist(models.Model):
     def creator_name(self):
         return self.creator.name
     
+    def researcher_emails(self):
+        email_list = list()
+        for user in self.researchers.all():
+            email_list.append(user.email)
+        return email_list
+    
     def reviewer_emails(self):
         email_list = list()
         for user in self.reviewers.all():

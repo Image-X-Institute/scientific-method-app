@@ -25,6 +25,7 @@ def add_checklist(request):
         if checklist_form.is_valid():
             new_checklist = Checklist(
                 checklist_title = checklist_form.cleaned_data.get('checklist_title'), 
+                document = checklist_form.cleaned_data.get('document'),
                 creator = request.user
             )
             new_checklist.save()
@@ -174,6 +175,7 @@ def edit_checklist(request, checklist_id):
             checklist_form = ChecklistForm(data=request.POST, initial={'creator': checklist.creator})
             if checklist_form.is_valid():
                 checklist.checklist_title = checklist_form.cleaned_data.get('checklist_title')
+                checklist.document = checklist_form.cleaned_data.get('document')
                 checklist.researchers.set(checklist_form.cleaned_data.get('researchers'))
                 checklist.reviewers.set(checklist_form.cleaned_data.get('reviewers'))
                 checklist.checklist_users.set(checklist.researchers.all().union(checklist.reviewers.all()))
@@ -182,6 +184,7 @@ def edit_checklist(request, checklist_id):
         else:
             checklist_form = ChecklistForm(initial={
                 'checklist_title': checklist.checklist_title, 
+                'document': checklist.document,
                 'creator': checklist.creator,
                 'researchers': [researcher.id for researcher in checklist.researchers.all()], 
                 'reviewers': [reviewer.id for reviewer in checklist.reviewers.all()], 

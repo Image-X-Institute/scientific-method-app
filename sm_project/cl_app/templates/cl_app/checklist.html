@@ -9,19 +9,22 @@
 {% endif %}
 <a href="{% url 'cl_app:edit_checklist' checklist.id %}"><button>Edit Checklist</button></a>
 <ul>
-{% for checklistitem in checklist.checklistitem_set.all %}
+{% for item in checklist.checklistitem_set.all %}
     <li>
-        {% if checklistitem.time_estimate is None %}
-            {{ checklistitem.item_title }} - {{ checklistitem.get_status }}
-        {% else %}
-            {{ checklistitem.item_title }} - {{ checklistitem.get_status }} - Expected to Be Completed By: {{ checklistitem.time_estimate }}
-        {% endif %}
-        {% if checklist in user.researchers.all and checklistitem.item_status != 2 %}
-            <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 2 %}"><button>Request Review</button></a>
-        {% elif checklist in user.reviewers.all and checklistitem.item_status == 2 %}
-            <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 1 %}"><button>Mark As Complete</button></a>
-            <a href="{% url 'cl_app:update_item_status' checklist.id checklistitem.id 3 %}"><button>Mark As Incomplete</button></a>
-        {% endif %}
+        <form action="{% url 'cl_app:update_item_status' item.id %}" method="POST">
+            {% csrf_token %}
+            {% if item.time_estimate is None %}
+                {{ item.item_title }} - {{ item.get_status }}
+            {% else %}
+                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}
+            {% endif %}
+            {% if checklist in user.researchers.all and item.item_status != 2 %}
+                <button type="submit" name="status" value="2">Request Review</button>
+            {% elif checklist in user.reviewers.all and item.item_status == 2 %}
+                <button type="submit" name="status" value="1">Mark As Complete</button>
+                <button type="submit" name="status" value="3">Mark As Incomplete</button>
+            {% endif %}
+        </form>
     </li>
 {% endfor %}
 </ul>

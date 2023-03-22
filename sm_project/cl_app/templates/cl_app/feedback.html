@@ -1,0 +1,7 @@
+<h2>Provide Feedback</h2>
+<form method="POST">
+  {% csrf_token %}
+  {{ feedback_form.as_p }}
+  <button type="submit">Submit Feedback</button>
+</form>
+<a href="{% url 'cl_app:checklist' item.item_checklist.id %}"><button>Skip</button>

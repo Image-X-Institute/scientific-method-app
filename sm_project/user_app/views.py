@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
-from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import NewUserForm
+from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render, redirect
+
+from user_app.forms import NewUserForm
 
 
 @csrf_protect

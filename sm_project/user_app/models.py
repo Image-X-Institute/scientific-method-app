@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.db import models
 from django.shortcuts import get_object_or_404
 
 

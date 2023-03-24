@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .forms import ChecklistAdminForm
-from .models import Checklist, ChecklistItem
+
+from cl_app.forms import ChecklistAdminForm
+from cl_app.models import Checklist, ChecklistItem
 
 
 class ChecklistAdmin(admin.ModelAdmin):

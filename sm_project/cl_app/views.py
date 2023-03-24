@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from .models import Checklist, ChecklistItem
-from .forms import ChecklistForm, ChecklistItemForm, FeedbackForm
-from ..settings import EMAIL_HOST_USER
+from django.shortcuts import render, get_object_or_404, redirect
+
+from cl_app.forms import ChecklistForm, ChecklistItemForm, FeedbackForm
+from cl_app.models import Checklist, ChecklistItem
+from sm_project.settings import EMAIL_HOST_USER
 
 
 @login_required(login_url='user_app:login')

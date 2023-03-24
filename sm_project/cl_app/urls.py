@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.urls import path
 from django.contrib.auth.views import LogoutView
-from . import views
+from django.urls import path
+
+from cl_app import views
 
 
 app_name = 'cl_app'

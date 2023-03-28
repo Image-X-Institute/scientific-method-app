@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render, redirect
 
-from user_app.forms import NewUserForm
+from sm_project.user_app.forms import NewUserForm
 
 
 @csrf_protect

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from cl_app import views
+from sm_project.cl_app import views
 
 
 app_name = 'cl_app'

@@ -1,6 +1,6 @@
 from django import forms
 
-from cl_app.models import Checklist, ChecklistItem
+from sm_project.cl_app.models import Checklist, ChecklistItem
 from sm_project.user_app.models import User
 
 

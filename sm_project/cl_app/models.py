@@ -14,6 +14,7 @@ class Checklist(models.Model):
         The title of the checklist.
     document: URLField
         The link to the document the checklist is attributed to.
+        This attribute is optional.
     creator: ForeignKey
         The creator of the checklist.
     checklist_users: ManyToManyField
@@ -72,6 +73,9 @@ class ChecklistItem(models.Model):
     time_estimate: DateField
         The estimated date that the checklist item is expected to be marked as complete by.
         This attribute is optional.
+    dependancies: ManyToManyField
+        The items that the item is the dependant on being marked as completed before they can be requested for review.
+        This attribute is optional.
 
     Methods
     -------
@@ -90,6 +94,7 @@ class ChecklistItem(models.Model):
     item_title = models.CharField(verbose_name="Checklist Item", max_length=200)
     item_status = models.IntegerField(verbose_name="Status", choices=Status.choices, default=Status.INCOMPLETE)
     time_estimate = models.DateField(verbose_name="Estimated Completion Date", null=True, blank=True)
+    depending_items = models.ManyToManyField("self", related_name="dependancies", blank=True, symmetrical=False)
 
     def __str__(self):
         return self.item_title

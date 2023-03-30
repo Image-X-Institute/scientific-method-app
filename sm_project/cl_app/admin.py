@@ -20,7 +20,7 @@ class ChecklistAdmin(admin.ModelAdmin):
 
 class ChecklistItemAdmin(admin.ModelAdmin):
     """Organises how the information about each checklist item is displayed on the admin site."""
-    fields = ('item_title', 'item_checklist', 'item_status', 'time_estimate', 'dependancies')
+    fields = ('item_title', 'item_checklist', 'item_status', 'time_estimate', 'dependencies')
     list_display = ['item_title', 'item_checklist', 'item_status', 'time_estimate']
     list_filter = ['item_status', 'item_checklist']
     search_fields = ['item_title']

@@ -14,11 +14,11 @@
         <form action="{% url 'cl_app:update_item_status' item.id %}" method="POST">
             {% csrf_token %}
             {% if item.time_estimate is None %}
-                {{ item.item_title }} - {{ item.get_status }}{{ item.get_dependancies }}
+                {{ item.item_title }} - {{ item.get_status }}{{ item.get_dependencies }}
             {% else %}
-                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}{{ item.get_dependancies }}
+                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}{{ item.get_dependencies }}
             {% endif %}
-            {% if checklist in user.researchers.all and item.item_status != 2 and not item.has_dependancies %}
+            {% if checklist in user.researchers.all and item.item_status != 2 and not item.has_dependencies %}
                 <button type="submit" name="status" value="2">Request Review</button>
             {% elif checklist in user.reviewers.all and item.item_status == 2 %}
                 <button type="submit" name="status" value="1">Mark As Complete</button>

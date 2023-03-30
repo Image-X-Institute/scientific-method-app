@@ -59,7 +59,7 @@ def add_temp_item(request):
                 time_estimate = item_form.cleaned_data.get('time_estimate')
             )
             new_item.save()
-            new_item.checklistitem_set.set(item_form.cleaned_data.get('dependancies'))
+            new_item.checklistitem_set.set(item_form.cleaned_data.get('dependencies'))
     return redirect('cl_app:add_checklist')
 
 @login_required(login_url='user_app:login')
@@ -159,8 +159,8 @@ def update_item_status(request, item_id):
         item.item_status = value
         item.save()
         if value == 1:
-            for dependancy in ChecklistItem.objects.all():
-                dependancy.dependancies.remove(item)
+            for dependency in ChecklistItem.objects.all():
+                dependency.dependencies.remove(item)
         elif value == 2 and EMAIL_HOST_USER != '':
             subject=f"Review Requested for {item.item_title} in {checklist.checklist_title}"
             message=f"{request.user.name} has requested that \"{item.item_title}\" as part of the checklist," +\
@@ -263,7 +263,7 @@ def add_item(request, checklist_id):
                     time_estimate = item_form.cleaned_data.get('time_estimate')
                 )
                 new_item.save()
-                new_item.dependancies.set(item_form.cleaned_data.get('dependancies'))
+                new_item.dependencies.set(item_form.cleaned_data.get('dependencies'))
                 item_form = ChecklistItemForm(item_checklist=checklist)
         else:
             item_form = ChecklistItemForm(item_checklist=checklist)

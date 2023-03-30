@@ -83,10 +83,10 @@ class ChecklistItem(models.Model):
         Prints the title of the checklist item.
     get_status(self)
         Returns the status of the checklist item.
-    get_dependancies(self)
+    get_dependencies(self)
         Returns a string of all the items that this item is dependant on.
-    has_dependancies(self)
-        Checks whether the item has dependancies and returns True or False accordingly
+    has_dependencies(self)
+        Checks whether the item has dependencies and returns True or False accordingly
     """
     class Status(models.IntegerChoices):
         # A class that stores the available choices for the IntegerField, item_status
@@ -98,7 +98,7 @@ class ChecklistItem(models.Model):
     item_title = models.CharField(verbose_name="Checklist Item", max_length=200)
     item_status = models.IntegerField(verbose_name="Status", choices=Status.choices, default=Status.INCOMPLETE)
     time_estimate = models.DateField(verbose_name="Estimated Completion Date", null=True, blank=True)
-    depending_items = models.ManyToManyField("self", related_name="dependancies", blank=True, symmetrical=False)
+    depending_items = models.ManyToManyField("self", related_name="dependencies", blank=True, symmetrical=False)
 
     def __str__(self):
         return self.item_title
@@ -106,14 +106,14 @@ class ChecklistItem(models.Model):
     def get_status(self):
         return self.Status(self.item_status).label
     
-    def get_dependancies(self):
-        dependancies = ""
-        if self.dependancies.exists():
-            dependancies = " - Dependant On: "
-            for dependancy in list(self.dependancies.all())[:-1]:
-                dependancies += f"{dependancy}, "
-            dependancies += f"{list(self.dependancies.all())[-1]}"
-        return dependancies
+    def get_dependencies(self):
+        dependencies = ""
+        if self.dependencies.exists():
+            dependencies = " - Dependant On: "
+            for dependency in list(self.dependencies.all())[:-1]:
+                dependencies += f"{dependency}, "
+            dependencies += f"{list(self.dependencies.all())[-1]}"
+        return dependencies
     
-    def has_dependancies(self):
-        return self.dependancies.exists()
+    def has_dependencies(self):
+        return self.dependencies.exists()

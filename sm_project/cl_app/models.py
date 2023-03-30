@@ -73,7 +73,7 @@ class ChecklistItem(models.Model):
     time_estimate: DateField
         The estimated date that the checklist item is expected to be marked as complete by.
         This attribute is optional.
-    dependancies: ManyToManyField
+    depending_items: ManyToManyField
         The items that the item is the dependant on being marked as completed before they can be requested for review.
         This attribute is optional.
 
@@ -83,6 +83,10 @@ class ChecklistItem(models.Model):
         Prints the title of the checklist item.
     get_status(self)
         Returns the status of the checklist item.
+    get_dependancies(self)
+        Returns a string of all the items that this item is dependant on.
+    has_dependancies(self)
+        Checks whether the item has dependancies and returns True or False accordingly
     """
     class Status(models.IntegerChoices):
         # A class that stores the available choices for the IntegerField, item_status
@@ -101,3 +105,15 @@ class ChecklistItem(models.Model):
 
     def get_status(self):
         return self.Status(self.item_status).label
+    
+    def get_dependancies(self):
+        dependancies = ""
+        if self.dependancies.exists():
+            dependancies = " - Dependant On: "
+            for dependancy in list(self.dependancies.all())[:-1]:
+                dependancies += f"{dependancy}, "
+            dependancies += f"{list(self.dependancies.all())[-1]}"
+        return dependancies
+    
+    def has_dependancies(self):
+        return self.dependancies.exists()

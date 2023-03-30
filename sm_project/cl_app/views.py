@@ -158,7 +158,10 @@ def update_item_status(request, item_id):
         (checklist.reviewers.contains(request.user) and (value == 1 or value == 3)):
         item.item_status = value
         item.save()
-        if value == 2 and EMAIL_HOST_USER != '':
+        if value == 1:
+            for dependancy in ChecklistItem.objects.all():
+                dependancy.dependancies.remove(item)
+        elif value == 2 and EMAIL_HOST_USER != '':
             subject=f"Review Requested for {item.item_title} in {checklist.checklist_title}"
             message=f"{request.user.name} has requested that \"{item.item_title}\" as part of the checklist," +\
                 f"\"{checklist.checklist_title}\" be peer reviewed by a reviewer. Login to the checklist webapp for more." 

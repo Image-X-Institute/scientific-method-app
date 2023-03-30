@@ -14,6 +14,7 @@ class Checklist(models.Model):
         The title of the checklist.
     document: URLField
         The link to the document the checklist is attributed to.
+        This attribute is optional.
     creator: ForeignKey
         The creator of the checklist.
     checklist_users: ManyToManyField
@@ -72,6 +73,9 @@ class ChecklistItem(models.Model):
     time_estimate: DateField
         The estimated date that the checklist item is expected to be marked as complete by.
         This attribute is optional.
+    depending_items: ManyToManyField
+        The items that the item is the dependant on being marked as completed before they can be requested for review.
+        This attribute is optional.
 
     Methods
     -------
@@ -79,6 +83,10 @@ class ChecklistItem(models.Model):
         Prints the title of the checklist item.
     get_status(self)
         Returns the status of the checklist item.
+    get_dependencies(self)
+        Returns a string of all the items that this item is dependant on.
+    dependencies_completed(self)
+        Checks whether all of the item's dependancies have been marked as complete.
     """
     class Status(models.IntegerChoices):
         # A class that stores the available choices for the IntegerField, item_status
@@ -90,9 +98,26 @@ class ChecklistItem(models.Model):
     item_title = models.CharField(verbose_name="Checklist Item", max_length=200)
     item_status = models.IntegerField(verbose_name="Status", choices=Status.choices, default=Status.INCOMPLETE)
     time_estimate = models.DateField(verbose_name="Estimated Completion Date", null=True, blank=True)
+    depending_items = models.ManyToManyField("self", related_name="dependencies", blank=True, symmetrical=False)
 
     def __str__(self):
         return self.item_title
 
     def get_status(self):
         return self.Status(self.item_status).label
+    
+    def get_dependencies(self):
+        dependencies = ""
+        if self.dependencies.exists():
+            dependencies = " - Dependant On: "
+            for dependency in list(self.dependencies.all())[:-1]:
+                dependencies += f"{dependency}, "
+            dependencies += f"{list(self.dependencies.all())[-1]}"
+        return dependencies
+    
+    def dependencies_completed(self):
+        if self.dependencies.exists():
+            for dependency in self.dependencies.all():
+                if dependency.item_status != 1:
+                    return False
+        return True

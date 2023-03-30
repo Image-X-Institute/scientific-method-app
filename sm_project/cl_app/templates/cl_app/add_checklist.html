@@ -8,9 +8,9 @@
     {% for item in temp_checklist.checklistitem_set.all %}
         <li>
             {% if item.time_estimate is None %}
-                {{ item.item_title }} - {{ item.get_status }}
+                {{ item.item_title }} - {{ item.get_status }}{{ item.get_dependencies }}
             {% else %}
-                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}
+                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}{{ item.get_dependencies }}
             {% endif %}
             <a href="{% url 'cl_app:remove_temp_item' item.id %}"><button>Remove Item</button></a>
         </li>

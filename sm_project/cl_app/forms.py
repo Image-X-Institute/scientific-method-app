@@ -53,10 +53,58 @@ class ChecklistItemForm(forms.ModelForm):
     """Organises how the ChecklistItem creation form will be set up"""
     class Meta:
         model = ChecklistItem
-        fields = ['item_title', 'time_estimate']
+        fields = ['item_title', 'time_estimate', 'dependencies']
     
     item_title = forms.CharField(label="Item Title")
     time_estimate = forms.DateField(label="Estimated Completion Date", required=False, widget=forms.SelectDateWidget)
+    dependencies = forms.ModelMultipleChoiceField(
+        queryset=ChecklistItem.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        item_checklist = kwargs.pop('item_checklist', None)
+        super(ChecklistItemForm, self).__init__(*args, **kwargs)
+        if item_checklist != None:
+            self.fields['dependencies'].queryset = ChecklistItem.objects.filter(item_checklist=item_checklist)
+        else:
+            self.fields['dependencies'].initial = self.instance.dependencies.all().values_list('id', flat=True)
+    
+    def save(self, *args, **kwargs):
+        instance = super(ChecklistItemForm, self).save(*args, **kwargs)
+        instance.dependencies.set(self.cleaned_data['dependencies'])
+        return instance
+
+class ChecklistItemAdminForm(ChecklistItemForm):
+    """Organises how the ChecklistItem creation form on the admin page will be set up"""
+    class Meta:
+        model = ChecklistItem
+        fields = ['item_checklist', 'item_title', 'item_status', 'time_estimate', 'dependencies']
+    
+    def __init__(self, *args, **kwargs):
+        super(ChecklistItemAdminForm, self).__init__(*args, **kwargs)
+        dependencies = list()
+        for item in ChecklistItem.objects.all():
+            if self.instance in item.dependencies.all():
+                dependencies.append(item.pk)
+        self.fields['dependencies'].queryset = ChecklistItem.objects.exclude(pk=self.instance.pk).exclude(id__in=dependencies)
+        self.fields['dependencies'].label_from_instance = self.label_from_instance
+    
+    @staticmethod
+    def label_from_instance(obj):
+        return f"{obj} - {obj.item_checklist}"
+    
+    def clean(self):
+        cleaned_data = super(ChecklistItemAdminForm, self).clean()
+        item_checklist = cleaned_data.get('item_checklist')
+        dependencies = cleaned_data.get('dependencies')
+        if dependencies and item_checklist:
+            for dependency in dependencies:
+                if dependency.item_checklist != item_checklist:
+                    raise forms.ValidationError("All dependencies must belong to the same checklist.")
+        return self.cleaned_data
+
 
 class FeedbackForm(forms.Form):
     feedback = forms.CharField(label="", widget=forms.Textarea, max_length=2000)

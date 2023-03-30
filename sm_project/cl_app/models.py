@@ -85,8 +85,8 @@ class ChecklistItem(models.Model):
         Returns the status of the checklist item.
     get_dependencies(self)
         Returns a string of all the items that this item is dependant on.
-    has_dependencies(self)
-        Checks whether the item has dependencies and returns True or False accordingly
+    dependencies_completed(self)
+        Checks whether all of the item's dependancies have been marked as complete.
     """
     class Status(models.IntegerChoices):
         # A class that stores the available choices for the IntegerField, item_status
@@ -115,5 +115,9 @@ class ChecklistItem(models.Model):
             dependencies += f"{list(self.dependencies.all())[-1]}"
         return dependencies
     
-    def has_dependencies(self):
-        return self.dependencies.exists()
+    def dependencies_completed(self):
+        if self.dependencies.exists():
+            for dependency in self.dependencies.all():
+                if dependency.item_status != 1:
+                    return False
+        return True

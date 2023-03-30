@@ -18,7 +18,7 @@
             {% else %}
                 {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}{{ item.get_dependencies }}
             {% endif %}
-            {% if checklist in user.researchers.all and item.item_status != 2 and not item.has_dependencies %}
+            {% if checklist in user.researchers.all and item.item_status != 2 and item.dependencies_completed %}
                 <button type="submit" name="status" value="2">Request Review</button>
             {% elif checklist in user.reviewers.all and item.item_status == 2 %}
                 <button type="submit" name="status" value="1">Mark As Complete</button>

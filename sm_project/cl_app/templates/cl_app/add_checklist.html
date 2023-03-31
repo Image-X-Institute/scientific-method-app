@@ -17,6 +17,7 @@
     {% endfor %}
 </ul>
 <h4>Add Checklist Item</h4>
+<a href="{% url 'cl_app:use_template' %}"><button>Use Template Checklist</button></a>
 <form action="{% url 'cl_app:add_temp_item' %}" method="POST">
     {% csrf_token %}
     {{ item_form.as_p }}

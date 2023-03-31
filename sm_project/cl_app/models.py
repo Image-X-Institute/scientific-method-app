@@ -30,6 +30,12 @@ class Checklist(models.Model):
         Prints the title of the checklist
     creator_name(self):
         Returns the name of the creator of the checklist.
+    researcher_emails(self)
+        Returns a list of all of the researchers attached to a checklist.
+    reviewer_emails(self)
+        Returns a list of all of the reviewers attached to a checklist.
+    template_checklist(self, item_set)
+        Changes a checklist's list of items to a template given by item_set.
     """
     checklist_title = models.CharField(verbose_name="Checklist", max_length=200)
     document = models.URLField(verbose_name="Document Link", max_length=150, blank=True)
@@ -57,6 +63,17 @@ class Checklist(models.Model):
         for user in self.reviewers.all():
             email_list.append(user.email)
         return email_list
+    
+    def template_checklist(self, item_list):
+        self.checklistitem_set.all().delete()
+        item = ChecklistItem(item_checklist=self, item_title=item_list[0], item_status=3)
+        item.save()
+        for it in range(len(item_list[:-1])):
+            prev_item = item
+            item = ChecklistItem(item_checklist=self, item_title=item_list[it+1], item_status=3)
+            item.save()
+            item.dependencies.add(prev_item)
+        return self.checklistitem_set.all()
 
 class ChecklistItem(models.Model):
     """A model class used to represent the items in each of the checklists.

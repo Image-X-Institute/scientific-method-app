@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from sm_project.cl_app.forms import ChecklistForm, ChecklistItemForm, FeedbackForm
 from sm_project.cl_app.models import Checklist, ChecklistItem
-from sm_project.settings import EMAIL_HOST_USER
+from sm_project.settings import EMAIL_HOST_USER, TEMPLATE_LIST
 
 
 @login_required(login_url='user_app:login')
@@ -48,7 +48,8 @@ def add_checklist(request):
 
 @login_required(login_url='user_app:login')
 def add_temp_item(request):
-    """Adds an item to a checklist that is used to store the checklist items until the user finalises the details of the checklist."""
+    """Adds an item to a checklist that is used to store the checklist items until the user finalises 
+    the details of the checklist."""
     temp_checklist = request.user.get_temp_checklist()
     if request.method == "POST":
         item_form = ChecklistItemForm(request.POST, item_checklist=temp_checklist)
@@ -60,6 +61,14 @@ def add_temp_item(request):
             )
             new_item.save()
             new_item.checklistitem_set.set(item_form.cleaned_data.get('dependencies'))
+    return redirect('cl_app:add_checklist')
+
+@login_required(login_url='user_app:login')
+def use_template(request):
+    """Changes the items in the temporary checklist to a template list of items."""
+    temp_checklist = request.user.get_temp_checklist()
+    item_list = TEMPLATE_LIST
+    temp_checklist.template_checklist(item_list)
     return redirect('cl_app:add_checklist')
 
 @login_required(login_url='user_app:login')

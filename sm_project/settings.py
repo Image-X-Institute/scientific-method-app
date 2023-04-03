@@ -75,6 +75,8 @@ AUTH_USER_MODEL = 'user_app.User'
 
 LOGOUT_REDIRECT_URL = "/"
 
+TEMPLATE_LIST = ["Introduction", "Hypothesis", "Key Terms", "Literature Review", "Justification", 
+                 "Assumptions", "Method", "Results", "Discussion", "Conclusion", "Abstract"]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from sm_project.cl_app.forms import ChecklistForm, ChecklistItemForm, FeedbackForm
 from sm_project.cl_app.models import Checklist, ChecklistItem
-from sm_project.settings import EMAIL_HOST_USER
+from sm_project.settings import EMAIL_HOST_USER, TEMPLATE_LIST
 
 
 @login_required(login_url='user_app:login')
@@ -67,8 +67,7 @@ def add_temp_item(request):
 def use_template(request):
     """Changes the items in the temporary checklist to a template list of items."""
     temp_checklist = request.user.get_temp_checklist()
-    item_list = ["Introduction", "Hypothesis", "Key Terms", "Literature Review", "Justification", 
-                 "Assumptions", "Method", "Results", "Discussion", "Conclusion", "Abstract"]
+    item_list = TEMPLATE_LIST
     temp_checklist.template_checklist(item_list)
     return redirect('cl_app:add_checklist')
 

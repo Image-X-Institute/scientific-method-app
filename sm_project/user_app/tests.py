@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 
 from sm_project.cl_app.models import Checklist
 from sm_project.user_app.forms import NewUserForm
@@ -51,3 +52,28 @@ class UserModelTest(TestCase):
     def test_get_temp_checklist(self):
         self.assertEqual(self.user1.get_temp_checklist(), self.check)
 
+class LoginRequestTest(TestCase):
+    def setUp(self):
+        self.credentials = {'username': "user1@test.com", 'password': "u0hN500N"}
+        User.objects.create_user(self.credentials['username'], "Test User", self.credentials['password'])
+    
+    def test_login(self):
+        response = self.client.post(reverse('user_app:login'), self.credentials, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['user'].is_authenticated)
+        self.assertRedirects(response, reverse('cl_app:user_checklists'))
+
+class RegisterRequestTest(TestCase):
+    def setUp(self):
+        self.information = {
+            'name': "Test User",
+            'email': "user1@test.com",
+            'password1': "u0hN500N",
+            'password2': "u0hN500N",
+        }
+
+    def test_register_request(self):
+        response = self.client.post(reverse('user_app:register'), self.information, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['user'].is_authenticated)
+        self.assertRedirects(response, reverse('cl_app:user_checklists'))

@@ -88,12 +88,8 @@ class ChecklistItemAdminForm(ChecklistItemForm):
         for item in ChecklistItem.objects.all():
             if self.instance in item.dependencies.all():
                 dependencies.append(item.pk)
-        self.fields['dependencies'].queryset = ChecklistItem.objects.exclude(pk=self.instance.pk).exclude(id__in=dependencies)
-        self.fields['dependencies'].label_from_instance = self.label_from_instance
-    
-    @staticmethod
-    def label_from_instance(obj):
-        return f"{obj} - {obj.item_checklist}"
+        dependencies.append(self.instance.pk)
+        self.fields['dependencies'].queryset = ChecklistItem.objects.exclude(id__in=dependencies).filter(item_checklist=self.instance.item_checklist)
     
     def clean(self):
         cleaned_data = super(ChecklistItemAdminForm, self).clean()

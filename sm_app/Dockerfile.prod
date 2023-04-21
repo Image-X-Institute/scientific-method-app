@@ -38,6 +38,7 @@ RUN addgroup -S sm_app && adduser -S sm_app -G sm_app
 ENV HOME=/home/sm_app
 ENV APP_HOME=/home/sm_app/web
 RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
 WORKDIR $APP_HOME
 
 # install dependencies

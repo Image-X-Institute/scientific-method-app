@@ -11,7 +11,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [ 3.8, 3.9, 3.10, 3.11 ]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
         database-name: 
           - sm_project_dev
         database-password:
@@ -47,7 +47,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r sm_app/requirements.txt
     - name: Sort imports
       run: |
         pip install isort

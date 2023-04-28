@@ -3,7 +3,7 @@ name: Django Image CI
 on:
   workflow_dispatch:
   push:
-    branches: [ "issue-83/github-action" ]
+    branches: [ "main" ]
 
 jobs:
   build:

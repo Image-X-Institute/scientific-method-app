@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(" ")
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:1337"]
 
@@ -76,8 +76,8 @@ AUTH_USER_MODEL = 'user_app.User'
 
 LOGOUT_REDIRECT_URL = "/"
 
-TEMPLATE_LIST = ["Introduction", "Hypothesis", "Key Terms", "Literature Review", "Justification", 
-                 "Assumptions", "Method", "Results", "Discussion", "Conclusion", "Abstract"]
+TEMPLATE_LIST = ["Hypothesis", "Key Terms", "Literature Review", "Justification", "Assumptions", "Method", 
+                 "Results", "Discussion", "Conclusion", "Introduction",  "Abstract", "Title"]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

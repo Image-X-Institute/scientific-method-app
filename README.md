@@ -14,7 +14,7 @@ python3 manage.py makemigrations
 ```
 Once you've done this, follow it up with:
 ```python
-python3 manage.py migrate
+python3 manage.py migrate 
 ```
 Once you've created the databases that will be used to store the data, you'll want to create an admin user. To do this, run:
 ```python

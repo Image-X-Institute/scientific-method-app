@@ -1,6 +1,7 @@
 name: Django Image CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
 

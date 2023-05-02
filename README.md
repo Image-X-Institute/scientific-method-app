@@ -9,15 +9,26 @@ The goal of this project is to create an application that will help support the 
 ## Setup/Build/Install
 
 To set-up the database functionality on your computer, clone the repositiory and inside scientific-method-app run:
-```python
+
+install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+navigate to sm_app folder:
+```bash
+cd sm_app
+```
+
+```bash
 python3 manage.py makemigrations
 ```
 Once you've done this, follow it up with:
-```python
+```bash
 python3 manage.py migrate 
 ```
 Once you've created the databases that will be used to store the data, you'll want to create an admin user. To do this, run:
-```python
+```bash
 python3 manage.py createsuperuser
 ```
 From there, enter the email and password that you want to use for the admin account.

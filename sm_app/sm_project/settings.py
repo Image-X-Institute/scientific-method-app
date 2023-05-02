@@ -136,11 +136,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-mail.outlook.com' # Update if chosen host email is not an outlook email.
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = '' # Enter host email before use.
-EMAIL_HOST_PASSWORD = '' # Enter host email password before use.
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp-mail.outlook.com')
+EMAIL_USE_TLS = bool(os.environ.get('EMAIL_USE_TLS', True))
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

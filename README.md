@@ -36,7 +36,8 @@ From there, enter the email and password that you want to use for the admin acco
 ## Usage
 
 To use the program, simply run the following command inside the scientific-method-app folder:
-```python
+
+```bash
 python3 manage.py runserver
 ```
 This should give you a link to view the web application with at the line ```Starting development server at [link]```. For example, ```http://127.0.0.1:8000/```. Open that link and from there, login as any user accounts you've created or register a new one.

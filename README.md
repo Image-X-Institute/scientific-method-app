@@ -27,8 +27,12 @@ $ docker compose -f docker-compose.yml down -v
 To build the production environment, make sure you've filled out the ".env.prod" and a ".env.prod.db" files first. See ".env.dev" for reference. Once these files have been created, run:
 ```bash
 $ docker compose -f docker-compose.prod.yml up -d --build
-$ docker compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
-$ docker compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
+$ docker compose -f docker-compose.prod.yml exec -w /home/sm_app/web/sm_app web python manage.py migrate --noinput
+$ docker compose -f docker-compose.prod.yml exec -w /home/sm_app/web/sm_app web python manage.py collectstatic --noinput
+```
+To make an admin user, run the following command and enter the email, name and password you wish to use:
+```bash
+$ docker compose -f docker-compose.prod.yml exec -w /home/sm_app/web/sm_app web python manage.py createsuperuser
 ```
 To bring down the production containers and associated volumes, run:
 ```bash
@@ -39,4 +43,4 @@ $ docker compose -f docker-compose.prod.yml down -v
 
 To use the program, if you're using the development environment, open ```http://localhost:8000/``` in a browser. If you're using the production environment, open ```http://localhost:1337/```. From there, freely use the application as you wish.
 
-To access the admin page, open ```http://localhost:8000/admin/``` or ```http://localhost:1337/``` depending on your environment. If you're using the production environment, login with the details you used when you created the superuser. If you're using the development environment, login using ```admin@superuser.com``` as the email and ```u0hN500N``` as the password. From here, you can view or select any database entry and add more or delete entries.
+To access the admin page, open ```http://localhost:8000/admin/``` or ```http://localhost:1337/``` depending on your environment. If you're using the production environment, login with the details you used when you created the admin user. If you're using the development environment, login using ```admin@superuser.com``` as the email and ```u0hN500N``` as the password. From here, you can view or select any database entry and add more or delete entries.

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    build: ./sm_app
+    build: ./
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - ./sm_app/:/usr/src/sm_app/

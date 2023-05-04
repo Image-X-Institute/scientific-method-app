@@ -3,9 +3,9 @@ version: '3.8'
 services:
   web:
     build: 
-      context: ./sm_app
+      context: ./
       dockerfile: Dockerfile.prod
-    command: gunicorn sm_project.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn --chdir ./sm_app sm_project.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/home/sm_app/web/staticfiles
     expose:

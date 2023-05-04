@@ -2,36 +2,41 @@
 
 **Author:** Lily Watt
 
-**ReadMe Last Updated:** 24/02/2023
+**ReadMe Last Updated:** 04/05/2023
 
 The goal of this project is to create an application that will help support the scientific method throughout the paper writing process. The app allows users to enter each step of the scientific method in a checklist format. Researchers mark those items as done and have reviewers then verify that each section of the report has been completed appropriately before the researchers move onto the next section. 
 
 ## Setup/Build/Install
 
-To set-up the database functionality on your computer, clone the repositiory and inside scientific-method-app run:
-```python
-python3 manage.py makemigrations
+To setup this project on your computer, clone the repositiory and inside scientific-method-app, run the following command to install the dependencies:
+```bash
+$ pip install -r requirements.txt
 ```
-Once you've done this, follow it up with:
-```python
-python3 manage.py migrate 
+<br>
+
+To build the development evironment, run:
+```bash
+$ docker compose -f docker-compose.yml up -d --build
 ```
-Once you've created the databases that will be used to store the data, you'll want to create an admin user. To do this, run:
-```python
-python3 manage.py createsuperuser
+To bring down the development containers and associated volumes, run:
+```bash
+$ docker compose -f docker-compose.yml down -v
 ```
-From there, enter the email and password that you want to use for the admin account.
+<br>
+
+To build the production environment, make sure you've filled out the ".env.prod" and a ".env.prod.db" files first. See ".env.dev" for reference. Once these files have been created, run:
+```bash
+$ docker compose -f docker-compose.prod.yml up -d --build
+$ docker compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
+$ docker compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
+```
+To bring down the production containers and associated volumes, run:
+```bash
+$ docker compose -f docker-compose.prod.yml down -v
+```
 
 ## Usage
 
-To use the program, simply run the following command inside the scientific-method-app folder:
-```python
-python3 manage.py runserver
-```
-This should give you a link to view the web application with at the line ```Starting development server at [link]```. For example, ```http://127.0.0.1:8000/```. Open that link and from there, login as any user accounts you've created or register a new one.
+To use the program, if you're using the development environment, open ```http://localhost:8000/``` in a browser. If you're using the production environment, open ```http://localhost:1337/```. From there, freely use the application as you wish.
 
-To add more database entries, head to the link listed in the terminal followed by ```.../admin/```. For example, ```http://127.0.0.1:8000/admin/```. Enter the details you used when you created the admin user and login. From here, you can select any database entry and add more or delete entries.
-
-## Directory Structure
-
-*To be written.*
+To access the admin page, open ```http://localhost:8000/admin/``` or ```http://localhost:1337/``` depending on your environment. If you're using the production environment, login with the details you used when you created the superuser. If you're using the development environment, login using ```admin@superuser.com``` as the email and ```u0hN500N``` as the password. From here, you can view or select any database entry and add more or delete entries.

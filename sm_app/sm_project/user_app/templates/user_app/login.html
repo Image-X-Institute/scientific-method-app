@@ -4,16 +4,16 @@
 
 {% block content %}
   <h2>Log In</h2>
-  <form method="POST">
+  <form id="login" method="POST">
     {% csrf_token %}
     {{ login_form|crispy }}
-    <div class="form-row">
-      <div class="col text-center">
-        <button type="submit" class="btn btn-primary">Log In</button>
-      </div>
-      <div class="col text-center">
-        <a href="{% url 'user_app:register' %}"><button class="btn btn-primary">Register</button></a>
-      </div>
-    </div>
   </form>
+  <div class="form-row">
+    <div class="col text-center">
+      <button type="submit" form="login" class="btn btn-primary">Log In</button>
+    </div>
+    <div class="col text-center">
+      <a href="{% url 'user_app:register' %}"><button class="btn btn-primary">Register</button></a>
+    </div>
+  </div>
 {% endblock %}

@@ -1,31 +1,70 @@
-{% if checklist in user.researchers.all %}
-    <h1>{{ checklist.checklist_title }} - Researcher View</h1>
-{% elif checklist in user.reviewers.all %}
-    <h1>{{ checklist.checklist_title }} - Reviewer View</h1>
-{% endif %}
-<h3>Created By: {{ checklist.creator.name }}</h3>
-{% if checklist.document != "" %}
-    <a href="{% url 'cl_app:open_document' checklist.id %}" target="_blank" rel="noopener noreferrer"><button>Open Associated Document</button></a>
-{% endif %}
-<a href="{% url 'cl_app:edit_checklist' checklist.id %}"><button>Edit Checklist</button></a>
-<ul>
-{% for item in checklist.checklistitem_set.all %}
-    <li>
-        <form action="{% url 'cl_app:update_item_status' item.id %}" method="POST">
-            {% csrf_token %}
-            {% if item.time_estimate is None %}
-                {{ item.item_title }} - {{ item.get_status }}{{ item.get_dependencies }}
-            {% else %}
-                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}{{ item.get_dependencies }}
-            {% endif %}
-            {% if checklist in user.researchers.all and item.item_status != 2 and item.dependencies_completed %}
-                <button type="submit" name="status" value="2">Request Review</button>
-            {% elif checklist in user.reviewers.all and item.item_status == 2 %}
-                <button type="submit" name="status" value="1">Mark As Complete</button>
-                <button type="submit" name="status" value="3">Mark As Incomplete</button>
-            {% endif %}
-        </form>
-    </li>
-{% endfor %}
-</ul>
-<a href="{% url 'cl_app:user_checklists' %}"><button>Back</button></a>
+{% extends 'user_app/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  {% if checklist in user.researchers.all and checklist in user.reviewers.all %}
+    <h2>{{ checklist.checklist_title }}</h2>
+  {% elif checklist in user.reviewers.all %}
+    <h2>{{ checklist.checklist_title }} - Reviewer View</h2>
+  {% else %}
+    <h2>{{ checklist.checklist_title }} - Researcher View</h2>
+  {% endif %}
+  <h4 class="pb-3">Created By: {{ checklist.creator.name }}</h4>
+  <div class="row pb-4">
+    {% if checklist.document != "" %}
+      <div class="col text-center">
+        <a href="{% url 'cl_app:open_document' checklist.id %}" target="_blank" rel="noopener noreferrer">
+          <button class="btn btn-info">Open Associated Document</button>
+        </a>
+      </div>
+    {% endif %}
+    <div class="col text-center">
+      <a href="{% url 'cl_app:edit_checklist' checklist.id %}"><button class="btn btn-info">Edit Checklist</button></a>
+    </div>
+  </div>
+  <h4 class="pb-3">Checklist Items</h4>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col" width="18%">Checklist Item</th>
+        <th scope="col" width="10%">Status</th>
+        <th scope="col" width="14%">Estimated Finish Date</th>
+        <th scope="col" width="25%">Dependencies</th>
+        <th scope="col" width="33%">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in checklist.checklistitem_set.all %}
+        <tr>
+          <td scope="row">{{ item.item_title }}</td>
+          <td>{{ item.get_status }}</td>
+          <td>{{ item.time_estimate }}</td>
+          <td>{{ item.get_dependencies }}</td>
+          <td>
+            <form action="{% url 'cl_app:update_item_status' item.id %}" method="POST">
+              {% csrf_token %}
+              <div class="row no-gutters">
+                {% if checklist in user.researchers.all and item.item_status != 2 and item.dependencies_completed %}
+                  <div class="col text-center">
+                    <button type="submit" name="status" value="2" class="btn btn-primary">Request Review</button>
+                  </div>
+                {% elif checklist in user.reviewers.all and item.item_status == 2 %}
+                  <div class="col text-center">
+                    <button type="submit" name="status" value="1" class="btn btn-success">Mark As Complete</button>
+                  </div>
+                  <div class="col text-center">
+                    <button type="submit" name="status" value="3" class="btn btn-danger">Mark As Incomplete</button>
+                  </div>
+                {% endif %}
+              </div>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="col text-center pb-4">
+    <a href="{% url 'cl_app:user_checklists' %}"><button class="btn btn-secondary">Back</button></a>
+  </div>
+{% endblock %}

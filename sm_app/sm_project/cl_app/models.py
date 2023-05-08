@@ -126,7 +126,6 @@ class ChecklistItem(models.Model):
     def get_dependencies(self):
         dependencies = ""
         if self.dependencies.exists():
-            dependencies = " - Dependant On: "
             for dependency in list(self.dependencies.all())[:-1]:
                 dependencies += f"{dependency}, "
             dependencies += f"{list(self.dependencies.all())[-1]}"

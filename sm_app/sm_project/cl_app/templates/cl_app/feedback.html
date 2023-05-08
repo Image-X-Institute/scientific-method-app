@@ -1,9 +1,21 @@
+{% extends 'user_app/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
 <h2>Provide Feedback</h2>
-<p>Please include detailed feedback on the novelty, potential impact of the research 
-    and the overall quality of the paper and give your opinion on the paper as an expert.</p>
-<form method="POST">
-    {% csrf_token %}
-    {{ feedback_form.as_p }}
-    <button type="submit">Submit Feedback</button>
+<p>In the form below, please include detailed feedback on the novelty, potential impact of the research 
+  and the overall quality of the paper and give your opinion on the paper as an expert.</p>
+<form id="feedback" method="POST">
+  {% csrf_token %}
+  {{ feedback_form|crispy }}
 </form>
-<a href="{% url 'cl_app:checklist' item.item_checklist.id %}"><button>Skip</button>
+<div class="form-row">
+  <div class="col text-center pb-4">
+    <button type="submit" form="feedback" class="btn btn-success">Submit Feedback</button>
+  </div>
+  <div class="col text-center pb-4">
+    <a href="{% url 'cl_app:checklist' item.item_checklist.id %}"><button class="btn btn-secondary">Skip</button>
+  </div>
+</div>
+{% endblock %}

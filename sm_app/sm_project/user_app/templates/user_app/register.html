@@ -1,7 +1,21 @@
-<h2>Create A User Account</h2>
-<form method="POST">
-  {% csrf_token %}
-  {{ register_form.as_p }}
-  <button type="submit">Create Account</button>
-</form>
-<a href="{% url 'user_app:login' %}"><button>Back</button></a>
+{% extends 'user_app/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2>Create A User Account</h2>
+  <form id="register" method="POST">
+    {% csrf_token %}
+    {{ register_form|crispy }}
+  </form>
+  <div class="form-row">
+    <div class="col text-center pb-2">
+      <button type="submit" form="register" class="btn btn-primary">Create Account</button>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col text-center pb-5">
+      <a href="{% url 'user_app:login' %}"><button class="btn btn-primary">Back</button></a>
+    </div>
+  </div>
+{% endblock %}

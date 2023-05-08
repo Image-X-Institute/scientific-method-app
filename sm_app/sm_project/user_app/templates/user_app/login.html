@@ -9,11 +9,11 @@
     {{ login_form|crispy }}
   </form>
   <div class="form-row">
-    <div class="col text-center">
+    <div class="col text-center pb-4">
       <button type="submit" form="login" class="btn btn-primary">Log In</button>
     </div>
-    <div class="col text-center">
-      <a href="{% url 'user_app:register' %}"><button class="btn btn-primary">Register</button></a>
+    <div class="col text-center pb-4">
+      <a href="{% url 'user_app:register' %}"><button class="btn btn-primary ">Register</button></a>
     </div>
   </div>
 {% endblock %}

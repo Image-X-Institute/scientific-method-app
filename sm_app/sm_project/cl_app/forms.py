@@ -1,4 +1,8 @@
+from crispy_forms.bootstrap import InlineCheckboxes
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Field, Hidden, Layout, Submit
 from django import forms
+from django.urls import reverse
 
 from sm_project.cl_app.models import Checklist, ChecklistItem
 from sm_project.user_app.models import User
@@ -30,6 +34,16 @@ class ChecklistForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple
     )
 
+    def __init__(self, *args, **kwargs):
+        super(ChecklistForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'POST'
+        self.helper.form_action = reverse('cl_app:add_checklist')
+        self.helper.form_id = 'add_checklist'
+        self.helper.label_class = 'col-lg-2 py-2'
+        self.helper.field_class = 'col-lg-10 py-2'
+
     def clean(self):
         cleaned_data = super(ChecklistForm, self).clean()
         researchers = cleaned_data.get('researchers')
@@ -56,7 +70,11 @@ class ChecklistItemForm(forms.ModelForm):
         fields = ['item_title', 'time_estimate', 'dependencies']
     
     item_title = forms.CharField(label="Item Title")
-    time_estimate = forms.DateField(label="Estimated Completion Date", required=False, widget=forms.SelectDateWidget)
+    time_estimate = forms.DateField(
+        label="Estimated Completion Date", 
+        required=False, 
+        widget=forms.SelectDateWidget(attrs=({'style': 'width: 32%; display: inline-block; margin-right: 6px; margin-left: 6px;'}))
+    )
     dependencies = forms.ModelMultipleChoiceField(
         queryset=ChecklistItem.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -70,6 +88,18 @@ class ChecklistItemForm(forms.ModelForm):
             self.fields['dependencies'].queryset = ChecklistItem.objects.filter(item_checklist=item_checklist)
         else:
             self.fields['dependencies'].initial = self.instance.dependencies.all().values_list('id', flat=True)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.form_method = 'POST'
+        self.helper.form_action = reverse('cl_app:add_temp_item')
+        self.helper.label_class = 'col-lg-2 py-2'
+        self.helper.field_class = 'col-lg-10 py-2'
+        self.helper.layout = Layout(
+            Field('item_title'),
+            Field('time_estimate', css_class="text-center"),
+            InlineCheckboxes('dependencies'),
+            Submit('submit', 'Add Item', css_class="btn btn-success"),
+        )
     
     def save(self, *args, **kwargs):
         instance = super(ChecklistItemForm, self).save(*args, **kwargs)

@@ -61,7 +61,7 @@ def add_temp_item(request):
                 time_estimate = item_form.cleaned_data.get('time_estimate')
             )
             new_item.save()
-            new_item.checklistitem_set.set(item_form.cleaned_data.get('dependencies'))
+            new_item.dependencies.set(item_form.cleaned_data.get('dependencies'))
     return redirect('cl_app:add_checklist')
 
 @login_required(login_url='user_app:login')

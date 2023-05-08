@@ -1,27 +1,53 @@
-<h1>Checklist Creation</h1>
-<form id="add_checklist" action="{% url 'cl_app:add_checklist' %}" method="POST">
-    {% csrf_token %}
-    {{ checklist_form.as_p }}
-</form>
-<h3>Checklist Items</h3>
-<ul>
-    {% for item in temp_checklist.checklistitem_set.all %}
-        <li>
-            {% if item.time_estimate is None %}
-                {{ item.item_title }} - {{ item.get_status }}{{ item.get_dependencies }}
-            {% else %}
-                {{ item.item_title }} - {{ item.get_status }} - Expected to Be Completed By: {{ item.time_estimate }}{{ item.get_dependencies }}
-            {% endif %}
-            <a href="{% url 'cl_app:remove_temp_item' item.id %}"><button>Remove Item</button></a>
-        </li>
-    {% endfor %}
-</ul>
-<h4>Add Checklist Item</h4>
-<a href="{% url 'cl_app:use_template' %}"><button>Use Template Checklist</button></a>
-<form action="{% url 'cl_app:add_temp_item' %}" method="POST">
-    {% csrf_token %}
-    {{ item_form.as_p }}
-    <button type="submit">Add Item</button>
-</form>
-<button type="submit" form="add_checklist">Create Checklist</button>
-<a href="{% url 'cl_app:user_checklists' %}"><button>Back</button></a>
+{% extends 'user_app/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2 class="pb-2">Checklist Creation</h2>
+  {% crispy checklist_form checklist_form.helper %}
+  <hr class="mt-2 mb-2">
+  <h4 class="pb-2">Checklist Items</h4>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col" width="20%">Checklist Item</th>
+        <th scope="col" width="12%">Status</th>
+        <th scope="col" width="20%">Estimated Finish Date</th>
+        <th scope="col" width="28%">Dependencies</th>
+        <th scope="col" width="20%">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in temp_checklist.checklistitem_set.all %}
+        <tr>
+          <td scope="row">{{ item.item_title }}</td>
+          <td>{{ item.get_status }}</td>
+          <td>{{ item.time_estimate }}</td>
+          <td>{{ item.get_dependencies }}</td>
+          <td>
+            <div class="col text-center">
+              <a href="{% url 'cl_app:remove_temp_item' item.id %}"><button class="btn btn-danger">Delete Item</button>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="col text-center pb-3">
+    <a href="{% url 'cl_app:use_template' %}"><button class="btn btn-primary">Use Template Checklist</button></a>
+  </div>
+  <hr class="mt-2 mb-2">
+  <h4>Add Checklist Item</h4>
+  {% crispy item_form item_form.helper %}
+  <hr class="mt-3 mb-3">
+  <div class="form-row">
+    <div class="col text-center pb-2">
+      <button type="submit" form="add_checklist" class="btn btn-success">Create Checklist</button>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col text-center pb-4">
+      <a href="{% url 'cl_app:user_checklists' %}"><button class="btn btn-secondary">Back</button></a>
+    </div>
+  </div>
+{% endblock %}

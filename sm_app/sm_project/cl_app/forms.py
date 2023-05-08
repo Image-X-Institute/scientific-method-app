@@ -1,6 +1,6 @@
 from crispy_forms.bootstrap import InlineCheckboxes
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Field, Hidden, Layout, Submit
+from crispy_forms.layout import Field, Layout, Submit
 from django import forms
 from django.urls import reverse
 
@@ -38,9 +38,6 @@ class ChecklistForm(forms.ModelForm):
         super(ChecklistForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.form_method = 'POST'
-        self.helper.form_action = reverse('cl_app:add_checklist')
-        self.helper.form_id = 'add_checklist'
         self.helper.label_class = 'col-lg-2 py-2'
         self.helper.field_class = 'col-lg-10 py-2'
 
@@ -83,15 +80,8 @@ class ChecklistItemForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         item_checklist = kwargs.pop('item_checklist', None)
-        super(ChecklistItemForm, self).__init__(*args, **kwargs)
-        if item_checklist != None:
-            self.fields['dependencies'].queryset = ChecklistItem.objects.filter(item_checklist=item_checklist)
-        else:
-            self.fields['dependencies'].initial = self.instance.dependencies.all().values_list('id', flat=True)
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
-        self.helper.form_method = 'POST'
-        self.helper.form_action = reverse('cl_app:add_temp_item')
         self.helper.label_class = 'col-lg-2 py-2'
         self.helper.field_class = 'col-lg-10 py-2'
         self.helper.layout = Layout(
@@ -100,6 +90,11 @@ class ChecklistItemForm(forms.ModelForm):
             InlineCheckboxes('dependencies'),
             Submit('submit', 'Add Item', css_class="btn btn-success"),
         )
+        super(ChecklistItemForm, self).__init__(*args, **kwargs)
+        if item_checklist != None:
+            self.fields['dependencies'].queryset = ChecklistItem.objects.filter(item_checklist=item_checklist)
+        else:
+            self.fields['dependencies'].initial = self.instance.dependencies.all().values_list('id', flat=True)
     
     def save(self, *args, **kwargs):
         instance = super(ChecklistItemForm, self).save(*args, **kwargs)

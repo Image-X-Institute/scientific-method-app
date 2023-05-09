@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap4',
     'sm_project.user_app.apps.UserAppConfig',
     'sm_project.cl_app.apps.ClAppConfig',
 ]
@@ -54,27 +56,28 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'sm_project.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [],
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'context_processors': [
+            'django.template.context_processors.debug',
+            'django.template.context_processors.request',
+            'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages',
+        ],
     },
-]
+}]
 
 WSGI_APPLICATION = 'sm_project.wsgi.application'
 
 AUTH_USER_MODEL = 'user_app.User'
 
 LOGOUT_REDIRECT_URL = "/"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 TEMPLATE_LIST = ["Hypothesis", "Key Terms", "Literature Review", "Justification", "Assumptions", "Method", 
                  "Results", "Discussion", "Conclusion", "Introduction",  "Abstract", "Title"]

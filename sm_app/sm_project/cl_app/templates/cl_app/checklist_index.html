@@ -1,17 +1,54 @@
+{% extends 'user_app/base.html' %}
 
-<h1>Checklists</h1>
-<a href="{% url 'cl_app:add_checklist' %}"><button>Add Checklist</button></a>
-<ul>
-{% for checklist in user.checklist_set.all %}
-    <li>
-        {{ checklist.checklist_title }} - Creator: {{ checklist.creator.name }}
-        <a href="{% url 'cl_app:checklist' checklist.id %}"><button>Open Checklist</button></a>
-        {% if checklist.creator == user %}
-            <a href="{% url 'cl_app:remove_checklist' checklist.id %}"><button onclick="return confirm('Are you sure?')">Delete Checklist</button></a>
-        {% else %}
-            <a href="{% url 'cl_app:leave_checklist' checklist.id %}"><button onclick="return confirm('Are you sure?')">Leave Checklist</button></a>
-        {% endif %}
-    </li>
-{% endfor %}
-</ul>
-<a href="{% url 'cl_app:logout' %}"><button>Logout</button></a>
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <h2 class="pb-2">Checklists</h2>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th scope="col" width="27%">Checklist</th>
+        <th scope="col" width="23%">Creator</th>
+        <th scope="col" width="50%">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for checklist in user.checklist_set.all %}
+        <tr>
+          <td scope="row">{{ checklist.checklist_title }}</td>
+          <td>{{ checklist.creator.name }}</td>
+          <td>
+            <div class="row no-gutters">
+              <div class="col text-center">
+                <a href="{% url 'cl_app:checklist' checklist.id %}">
+                  <button class="btn btn-primary">Open Checklist</button>
+                </a>
+              </div>
+              <div class="col text-center">
+                {% if checklist.creator == user %}
+                  <a href="{% url 'cl_app:remove_checklist' checklist.id %}">
+                    <button class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete Checklist</button>
+                  </a>
+                {% else %}
+                  <a href="{% url 'cl_app:leave_checklist' checklist.id %}">
+                    <button class="btn btn-warning" onclick="return confirm('Are you sure?')">Leave Checklist</button>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      <tr>
+        <td scope="row" colspan="3">
+          <div class="col text-center">
+            <a href="{% url 'cl_app:add_checklist' %}"><button class="btn btn-success">Add Checklist</button></a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col text-center pb-4">
+    <a href="{% url 'cl_app:logout' %}"><button class="btn btn-secondary">Logout</button></a>
+  </div>
+{% endblock %}

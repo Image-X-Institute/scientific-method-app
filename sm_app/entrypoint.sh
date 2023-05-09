@@ -11,9 +11,9 @@ then
     echo "PostgreSQL started"
 fi
 
-python3 manage.py flush --no-input
+python manage.py flush --no-input
 python manage.py makemigrations
-python3 manage.py migrate
+python manage.py migrate
 
 if [ "$DJANGO_SUPERUSER_EMAIL" ]
 then

@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for checklist in user.checklist_set.all %}
+      {% for checklist in user.checklist_set.all|dictsort:"pk" %}
         <tr>
           <td scope="row">{{ checklist.checklist_title }}</td>
           <td>{{ checklist.creator.name }}</td>

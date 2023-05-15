@@ -35,7 +35,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for item in checklist.checklistitem_set.all %}
+      {% for item in checklist.checklistitem_set.all|dictsort:"pk" %}
         <tr>
           <td scope="row">{{ item.item_title }}</td>
           <td>{{ item.get_status }}</td>

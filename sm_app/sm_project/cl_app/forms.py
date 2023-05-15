@@ -130,8 +130,7 @@ class FeedbackForm(forms.Form):
     feedback = forms.CharField(label="", widget=forms.Textarea, max_length=2000)
     warning_override = forms.BooleanField(label="Warning Override", widget=forms.HiddenInput, initial=False, required=False)
 
-    def clean_feedback(self):
-        if len(self.cleaned_data["feedback"]) <= 30:
+    def clean(self):
+        if len(self.cleaned_data["feedback"]) <= 30 and self.cleaned_data["warning_override"] == False:
             raise forms.ValidationError("It's recommended that you provide feedback longer than 30 characters", "charactermin")
-        else:
-            return self.cleaned_data["feedback"]
+        return self.cleaned_data

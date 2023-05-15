@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -205,7 +206,7 @@ def send_feedback(request, item_id):
                     message += f"\n\nFind the associated document at {checklist.document}"
                 send_mail(subject, message, EMAIL_HOST_USER, checklist.researcher_emails())
                 return redirect('cl_app:checklist', checklist_id=checklist.id)
-            elif feedback_form.has_error('feedback', 'charactermin'):
+            elif feedback_form.has_error(NON_FIELD_ERRORS, 'charactermin'):
                 feedback_form.fields["warning_override"].widget = forms.CheckboxInput()
         else:
             feedback_form = FeedbackForm()
